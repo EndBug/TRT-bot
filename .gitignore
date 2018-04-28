@@ -1,5 +1,4 @@
 node_modules
 *.private.json
 *.ini
-reloadme.json
 .eslintrc.json
