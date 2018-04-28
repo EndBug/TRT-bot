@@ -17,20 +17,22 @@ goGlobal({
 });
 require("./tree.js");
 
-var say = require(tree[config.lang]);
+const token = require(tree["passwords.private.json"]).token;
+const config = require(tree["config.json"]);
+const client = new Discord.Client();
+var guild, owner;
+
+var say = require(tree[config.lang + ".js"]);
 //hard-coded message
 if (say("test") != "ok") throw new Error(`Language module ${config.lang} not working properly: test command returned \`"${say("test")}"\` instead of \`"ok"\``);
 
 client.login(token);
 
 const modules = [
-  tree["new_member.js"]
+  tree["new_member.js"],
+  tree["commands.js"]
 ];
 
-const token = require(tree["passwords.private.json"]).token;
-const config = require(tree["config.json"]);
-const client = new Discord.Client();
-var guild, owner;
 
 var channels = {
   general: "chat",
@@ -72,6 +74,7 @@ function runModules(exept = []) {
   if (typeof exept != Object) exept = [exept];
   for (let mod of modules) {
     let l_mod = require(mod);
+    console.log(`[LOADER] Loaded ${l_mod.name}`);
     if (!exept.includes(mod) && !exept.includes(l_mod.name)) l_mod.run();
   }
 }
@@ -91,10 +94,10 @@ class Command {
   }
 }
 
-Discord.GuildMember.prototype.hasRole = (role) => {
+Discord.GuildMember.prototype.hasRole = function(role) {
   if (role instanceof Discord.Role)
     for (let r of this.roles.array())
-      if (r == roles) return true;
+      if (r == role) return true;
   return false;
 };
 
@@ -165,9 +168,11 @@ client.on("ready", () => {
       Command,
       commands,
       config,
+      Discord,
       error,
       guild,
       owner,
+      ranks,
       roles,
       say
     }

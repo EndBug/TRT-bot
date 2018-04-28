@@ -19,6 +19,7 @@ module.exports.utils = {
   },
   rank: (member) => {
     if (member instanceof Discord.GuildMember) {
+      console.log(member.hasRole(roles.developer));
       if (member.hasRole(roles.developer)) return ranks.DEV;
       else if (member.hasRole(roles.admin)) return ranks.ADMIN;
       else if (member.hasRole(roles.staff)) return ranks.STAFF;
@@ -57,7 +58,9 @@ module.exports.utils = {
     module.exports.utils.writeJSON(absolutePath(tree["config.json"]), config);
   },
   writeJSON: (path = "", obj) => {
-    if (fs.existsSync(path) && typeof obj == Object) fs.writeFile(path, JSON.stringify(obj), (e) => error(e));
-    else error("utils.js", "writeJSON", `Path: ${path} - Obj: ${JSON.stringify(obj)}`);
+    if (fs.existsSync(path) && typeof obj == "object") fs.writeFile(path, JSON.stringify(obj), (e) => {
+      if (e != null) error("utils.js", "writeJSON", e);
+    });
+    else error("utils.js", "writeJSON", `Path: ${path} -> ${fs.existsSync(path)} \nObj: ${JSON.stringify(obj)} -> ${typeof obj == "object"}`);
   }
 };
