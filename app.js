@@ -17,7 +17,7 @@ goGlobal({
 });
 require("./tree.js");
 
-const token = require(tree["passwords.private.json"]).token;
+const token = process.env.TOKEN;
 const config = require(tree["config.json"]);
 const client = new Discord.Client();
 var guild, owner;
