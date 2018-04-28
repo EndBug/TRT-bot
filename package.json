@@ -8,10 +8,12 @@
     "nodemon": "^1.17.3",
     "npm": "^5.8.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "jest": "^22.4.3"
+  },
   "scripts": {
     "start": "nodemon --watch misc/reloadme.json app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --testMatch **/test/**/*.js"
   },
   "author": "Federico Grandi <fgrandi30@gmail.com>",
   "license": "MIT"
