@@ -2,6 +2,7 @@
 module.exports.name = "Tree";
 
 const tree = {
+  "commands.js": "./src/commands/commands.js",
   "config.json": "./src/settings/config.private.json",
   "en-us.js": "./src/lang/en-us.js",
   "help.js": "./src/commands/help.js",
@@ -22,7 +23,7 @@ function absolutePath(dir) {
 }
 
 function check(element = {}) {
-  for (let dir of element.values()) {
+  for (let dir of Object.values(element)) {
     let path = absolutePath(dir);
     //hard-coded message
     if (!fs.existsSync(path)) throw new Error(`\`${path}\` does not exist. If you believe it's an error, check if the tree in \`tree.js\` is updated`);

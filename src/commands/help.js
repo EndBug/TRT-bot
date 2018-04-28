@@ -9,7 +9,7 @@ function getCommands(rank, all_commands) {
 module.exports = (user, rank, all_commands) => {
   return new Promise((resolve, reject) => {
     try {
-      if (user instanceof Discord.User && !isNaN(rank) && typeof all_commands == Object) {
+      if (user instanceof Discord.User && !isNaN(rank) && typeof all_commands == "object") {
         let embeds = [],
           display = getCommands(rank, all_commands),
           n = Math.floor(display.length / 25 - 0.01);
@@ -41,7 +41,7 @@ module.exports = (user, rank, all_commands) => {
             if (i == embeds.length - 1) resolve(say("help-success"));
           });
         } //hard-coded message
-      } else reject(`isUser? ${user instanceof Discord.User} - Rank? ${rank} - Commands? ${typeof all_commands == Object}`);
+      } else reject(`isUser? ${user instanceof Discord.User} - Rank? ${rank} - Commands? ${typeof all_commands == "object"}`);
     } catch (e) {
       reject(e);
     }

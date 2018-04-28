@@ -10,6 +10,7 @@
   },
   "devDependencies": {},
   "scripts": {
+    "start": "nodemon --watch misc/reloadme.json app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Federico Grandi <fgrandi30@gmail.com>",
