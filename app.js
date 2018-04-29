@@ -29,8 +29,9 @@ if (say("test") != "ok") throw new Error(`Language module ${config.lang} not wor
 client.login(token);
 
 const modules = [
+  tree["commands.js"],
   tree["new_member.js"],
-  tree["commands.js"]
+  tree["reactions.js"]
 ];
 
 
