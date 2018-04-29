@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "nodemon --watch misc/reloadme.json app.js",
-    "test": "jest --testMatch **/test/**/*.js"
+    "test": "jest ./test.js"
   },
   "author": "Federico Grandi <fgrandi30@gmail.com>",
   "license": "MIT"

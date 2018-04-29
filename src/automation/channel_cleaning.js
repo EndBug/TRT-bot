@@ -2,11 +2,14 @@
 
 module.exports.name = "Channel cleaning";
 
-module.exports.clean = (curr) => {
+module.exports.clean = (curr, callback = () => {}) => {
   curr.bulkDelete(100, true)
     .then((messages) => {
-      if (messages >= 100) module.exports.clean(curr);
-      else setTimeout(() => module.exports.clean(curr), config.cleantime * 60 * 1000);
+      if (messages.size >= 100) module.exports.clean(curr);
+      else {
+        setTimeout(() => module.exports.clean(curr), config.cleantime * 60 * 1000);
+        setTimeout(() => callback(messages.size), 3000);
+      }
     })
     .catch((e) => error("channel_cleaning.js", "run", e));
 };
