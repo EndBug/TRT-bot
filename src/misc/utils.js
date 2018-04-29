@@ -19,7 +19,6 @@ module.exports.utils = {
   },
   rank: (member) => {
     if (member instanceof Discord.GuildMember) {
-      console.log(member.hasRole(roles.developer));
       if (member.hasRole(roles.developer)) return ranks.DEV;
       else if (member.hasRole(roles.admin)) return ranks.ADMIN;
       else if (member.hasRole(roles.staff)) return ranks.STAFF;
