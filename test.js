@@ -1,11 +1,12 @@
-/*global Discord expect test*/
+/*global client Discord expect test*/
 global.Discord = require("discord.js");
 global.fetch = require("node-fetch");
-const client = new Discord.Client();
+global.client = new Discord.Client();
 const token = `${process.env.TEST_TOKEN}`;
 
 const utils = require("./src/misc/utils.js");
 const channel_cleaning = require("./src/automation/channel_cleaning.js");
+const reactions = require("./src/automation/reactions.js");
 
 Discord.GuildMember.prototype.hasRole = function(role) {
   if (role instanceof Discord.Role)
@@ -23,6 +24,7 @@ test("Name check & login", async () => {
 
   expect(utils.name).toBe("Utils");
   expect(channel_cleaning.name).toBe("Channel cleaning");
+  expect(reactions.name).toBe("Reactions control");
 });
 
 
@@ -99,7 +101,7 @@ test("now", () => {
   expect(utils.utils.now() instanceof Date).toBe(true);
 });
 
-test("Clean", async () => {
+test("clean", async () => {
   let guild = client.guilds.get("406797621563490315");
   let channel = guild.channels.find("type", "text");
   let i = 0;
@@ -108,7 +110,7 @@ test("Clean", async () => {
 
   let p = new Promise((resolve) => {
     function s() {
-      channel.send("Test message.").then(() => {
+      channel.send("Prune test.").then(() => {
         i++;
         if (i < 3) s();
         else channel_cleaning.clean(channel, (n) => {
@@ -122,6 +124,25 @@ test("Clean", async () => {
   await p;
   expect(result).toBeLessThanOrEqual(100);
 
+});
+
+test("reactions", async () => {
+  let guild = client.guilds.get("406797621563490315");
+  let channel = guild.channels.find("type", "text");
+  let mid, res;
+  reactions.run();
+  channel.send("Reaction test.").then((message) => {
+    mid = message.id;
+    message.react("😂").then(() => message.react("😏"));
+  });
+  let p = new Promise((resolve) => setTimeout(resolve, 1000));
+  await p;
+  let w = new Promise((resolve) => channel.fetchMessage(mid).then((message) => {
+    res = message;
+    resolve();
+  }));
+  await w;
+  expect(res.reactions.size).toBe(1);
 });
 
 //off, updateConfig & writeJSON not tested
