@@ -29,6 +29,7 @@ if (say("test") != "ok") throw new Error(`Language module ${config.lang} not wor
 client.login(token);
 
 const modules = [
+  tree["channel_cleaning.js"],
   tree["commands.js"],
   tree["new_member.js"],
   tree["reactions.js"]
@@ -36,37 +37,81 @@ const modules = [
 
 
 var channels = {
-  general: "chat",
-  staff: "staff",
-  admin: "admins",
-  bot: "botchat"
+  general: {
+    name: "chat",
+    id: "266553379201875968"
+  },
+  staff: {
+    name: "staff",
+    id: "366301801722544128"
+  },
+  admin: {
+    name: "admins",
+    id: "300606293721219072"
+  },
+  bot: {
+    name: "botchat",
+    id: "300600162235973632"
+  },
+  nomic: {
+    name: "muted-mic-texts",
+    id: "377793122836414464"
+  }
 };
 
 var roles = {
-  user: "Players",
-  staff: "Staff",
-  admin: "Admins",
-  developer: "Developers"
+  user: {
+    name: "Players",
+    id: "300593365773189120"
+  },
+  staff: {
+    name: "Staff",
+    id: "366294150880034837"
+  },
+  admin: {
+    name: "Admins",
+    id: "300592362005069825"
+  },
+  developer: {
+    name: "Developers",
+    id: "385532005640699915"
+  }
 };
 
-function error(file, f, message) {
-  owner.send(`**ERROR:**\n\`${file}\` > \`${f}\`\n*${message}*`);
+function error(file, f, message, callback = () => {}) {
+  owner.send(`**ERROR:**\n\`${file}\` > \`${f}\`\n*${message}*`).then(callback());
 }
 
 function initChannels() {
   for (let c in channels) {
-    let name = channels[c];
-    let channel = guild.channels.find("name", name);
-    if (channel == undefined) error("app.js", "initChannels", `Channel "${name}" returns \`undefined\``);
-    channels[c] = channel;
+    let curr = channels[c];
+    let channel = guild.channels.find("name", curr.name);
+    if (channel == undefined) {
+      error("app.js", "initChannels", `Channel with name "${curr.name}" returns \`undefined\`, trying to use backup id.`);
+      channel = guild.channels.get(curr.id);
+      if (channel == undefined) {
+        error("app.js", "initChannels", `Using fallback id "${curr.id}" returns \`undefined\`, stopping bot...`, () => {
+          throw new Error(`Using fallback id "${curr.id}" returns \`undefined\`, stopping bot...`);
+        });
+      }
+      channels[c] = channel;
+    }
   }
 }
 
 function initRoles() {
   for (let r in roles) {
-    let name = roles[r];
-    let role = guild.roles.find("name", name);
-    if (role == undefined) error("app.js", "initRoles", `Role "${name}" returns \`undefined\``);
+    let curr = roles[r];
+    let role = guild.roles.find("name", curr.name);
+    if (role == undefined) {
+      error("app.js", "initRoles", `Role with name "${curr.name}" returns \`undefined\`, trying to use backup id.`);
+      role = guild.roles.get(curr.id);
+      if (role == undefined) {
+        error("app.js", "initRoles", `Using fallback id "${curr.id}" returns \`undefined\`, stopping bot...`, () => {
+          throw new Error(`Using fallback id "${curr.id}" returns \`undefined\`, stopping bot...`);
+        });
+      }
+    }
     roles[r] = role;
   }
 }
