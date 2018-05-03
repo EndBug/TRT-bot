@@ -32,7 +32,8 @@ const modules = [
   tree["channel_cleaning.js"],
   tree["commands.js"],
   tree["new_member.js"],
-  tree["reactions.js"]
+  tree["reactions.js"],
+  tree["status_rotation"]
 ];
 
 
