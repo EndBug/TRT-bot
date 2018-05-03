@@ -161,6 +161,20 @@ var colors = {
   GREEN: 0x19eb00
 };
 
+var PresenceStatuses = {
+  DND: "dnd",
+  IDLE: "idle",
+  INVISIBLE: "invisible",
+  ONLINE: "online"
+};
+
+var ActivityTypes = {
+  LISTENING: "WATCHING",
+  PLAYING: "PLAYING",
+  STREAMING: "STREMING",
+  WATCHING: "WATCHING"
+};
+
 var commands = {
   chat: {
     help: new Command(ranks.PLAYER, "help", "help", say("help-help")),
@@ -207,7 +221,10 @@ client.on("ready", () => {
   initRoles();
 
   let to_global = Object.assign(
-    ranks, {
+    ranks,
+    PresenceStatuses,
+    ActivityTypes, {
+      ActivityTypes,
       channels,
       client,
       colors,
@@ -218,6 +235,7 @@ client.on("ready", () => {
       error,
       guild,
       owner,
+      PresenceStatuses,
       ranks,
       roles,
       say
