@@ -102,9 +102,12 @@ test("now", () => {
 });
 
 test("clean", async () => {
+<<<<<<< HEAD
   global.config = {
     cleantime: 120
   };
+=======
+>>>>>>> edc71d2d42264aab39a96362f20026813ab7287d
   let guild = client.guilds.get("406797621563490315");
   let channel = guild.channels.find("type", "text");
   let i = 0;
@@ -130,6 +133,7 @@ test("clean", async () => {
 });
 
 test("reactions", async () => {
+<<<<<<< HEAD
   reactions.run();
   let res;
   let p = new Promise((resolve, reject) => {
@@ -147,6 +151,24 @@ test("reactions", async () => {
   });
   await p;
   expect(res).toBe(1);
+=======
+  let guild = client.guilds.get("406797621563490315");
+  let channel = guild.channels.find("type", "text");
+  let mid, res;
+  reactions.run();
+  channel.send("Reaction test.").then((message) => {
+    mid = message.id;
+    message.react("😂").then(() => message.react("😏"));
+  });
+  let p = new Promise((resolve) => setTimeout(resolve, 1000));
+  await p;
+  let w = new Promise((resolve) => channel.fetchMessage(mid).then((message) => {
+    res = message;
+    resolve();
+  }));
+  await w;
+  expect(res.reactions.size).toBe(1);
+>>>>>>> edc71d2d42264aab39a96362f20026813ab7287d
 });
 
 //off, updateConfig & writeJSON not tested
