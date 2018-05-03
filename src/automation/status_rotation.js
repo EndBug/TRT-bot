@@ -28,14 +28,19 @@ var maintenance = [
 
 module.exports.name = "Status rotation";
 module.exports.run = () => {
+  let curr;
   if (!config.maintenance) {
-    client.user.setPresence(status[is]);
+    curr = status[is];
     is++;
     is %= status.length;
   } else {
-    client.user.setPresence(maintenance[im]);
+    curr = maintenance[im];
     im++;
     im %= maintenance.length;
   }
+  client.user.setStatus(curr.status);
+  client.user.setActivity(curr.game.name, {
+    type: curr.game.type
+  });
   setTimeout(module.exports.run, config.statusSec * 1000);
 };
