@@ -95,8 +95,8 @@ function initChannels() {
           throw new Error(`Using fallback id "${curr.id}" returns \`undefined\`, stopping bot...`);
         });
       }
-      channels[c] = channel;
     }
+    channels[c] = channel;
   }
 }
 
