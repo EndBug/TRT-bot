@@ -2,11 +2,13 @@
 module.exports.name = "Tree";
 
 const tree = {
+  "channel_cleaning.js": "./src/automation/channel_cleaning.js",
   "commands.js": "./src/commands/commands.js",
   "config.json": "./src/settings/config.json",
   "en-us.js": "./src/lang/en-us.js",
   "help.js": "./src/commands/help.js",
   "new_member.js": "./src/automation/new_member.js",
+  "reactions.js": "./src/automation/reactions.js",
   "reloadme.json": "./src/misc/reloadme.json",
   "utils.js": "./src/misc/utils.js"
 };
