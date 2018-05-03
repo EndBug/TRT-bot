@@ -1,11 +1,6 @@
 /*global tree*/
 const Discord = require("discord.js");
-const http = require("http");
 const fs = require("fs");
-
-setInterval(function() {
-  http.get("http://trt-bot.herokuapp.com");
-}, 300000);
 
 function goGlobal(obj) {
   for (let key in obj) global[key] = obj[key];
