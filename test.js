@@ -3,11 +3,29 @@ global.Discord = require("discord.js");
 global.fetch = require("node-fetch");
 global.fs = require("fs");
 global.client = new Discord.Client();
-const token = `${process.env.TEST_TOKEN}`;
+global.config = {
+  p: "."
+};
+global.PresenceStatuses = {
+  DND: "dnd",
+  IDLE: "idle",
+  INVISIBLE: "invisible",
+  ONLINE: "online"
+};
+global.ActivityTypes = {
+  LISTENING: "WATCHING",
+  PLAYING: "PLAYING",
+  STREAMING: "STREMING",
+  WATCHING: "WATCHING"
+};
 jest.setTimeout(10000);
+
+const token = `${process.env.TEST_TOKEN}`;
+
 const utils = require("./src/misc/utils.js");
 const channel_cleaning = require("./src/automation/channel_cleaning.js");
 const reactions = require("./src/automation/reactions.js");
+const status = require("./src/automation/status_rotation.js");
 
 Discord.GuildMember.prototype.hasRole = function(role) {
   if (role instanceof Discord.Role)
@@ -26,6 +44,7 @@ test("Name check & login", async () => {
   expect(utils.name).toBe("Utils");
   expect(channel_cleaning.name).toBe("Channel cleaning");
   expect(reactions.name).toBe("Reactions control");
+  expect(status.name).toBe("Status rotation");
 });
 
 test("tree", () => {
@@ -122,7 +141,6 @@ test("clean", async () => {
         i++;
         if (i < 3) s();
         else channel_cleaning.clean(channel, (n) => {
-          console.log(n);
           result = n;
           resolve();
         });
@@ -132,7 +150,6 @@ test("clean", async () => {
   });
   await p;
   expect(result).toBeLessThanOrEqual(100);
-  if (require.cache["./src/automation/channel_cleaning.js"]) delete require.cache["./src/automation/channel_cleaning.js"];
 });
 
 test("reactions", async () => {
@@ -152,6 +169,19 @@ test("reactions", async () => {
   });
   await p;
   expect(res).toBe(1);
+});
+
+test("status rotation", async () => {
+  global.config = {
+    p: ".",
+    maintenance: false,
+    statusSec: 709
+  };
+  status.run();
+  expect(client.user.presence.status).toBe("online");
+  global.config.maintenance = true;
+  status.run();
+  expect(client.user.presence.status).toBe("dnd");
 });
 
 //off, updateConfig & writeJSON not tested
