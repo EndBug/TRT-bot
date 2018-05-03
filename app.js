@@ -33,7 +33,7 @@ const modules = [
   tree["commands.js"],
   tree["new_member.js"],
   tree["reactions.js"],
-  tree["status_rotation"]
+  tree["status_rotation.js"]
 ];
 
 
