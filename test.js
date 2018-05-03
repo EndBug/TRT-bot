@@ -1,9 +1,10 @@
-/*global client Discord expect test*/
+/*global client Discord expect jest test*/
 global.Discord = require("discord.js");
 global.fetch = require("node-fetch");
+global.fs = require("fs");
 global.client = new Discord.Client();
 const token = `${process.env.TEST_TOKEN}`;
-jest.setTimeout(10000)
+jest.setTimeout(10000);
 const utils = require("./src/misc/utils.js");
 const channel_cleaning = require("./src/automation/channel_cleaning.js");
 const reactions = require("./src/automation/reactions.js");
@@ -27,6 +28,10 @@ test("Name check & login", async () => {
   expect(reactions.name).toBe("Reactions control");
 });
 
+test("tree", () => {
+  global.goGlobal = () => {};
+  require("./tree.js");
+});
 
 test("createArgs", () => {
   let message = new Discord.Message();
@@ -103,7 +108,7 @@ test("now", () => {
 
 test("clean", async () => {
   global.config = {
-    cleantime: 120
+    cleantimeMin: 120
   };
   let guild = client.guilds.get("406797621563490315");
   let channel = guild.channels.find("type", "text");
@@ -117,6 +122,7 @@ test("clean", async () => {
         i++;
         if (i < 3) s();
         else channel_cleaning.clean(channel, (n) => {
+          console.log(n);
           result = n;
           resolve();
         });
@@ -126,7 +132,7 @@ test("clean", async () => {
   });
   await p;
   expect(result).toBeLessThanOrEqual(100);
-
+  if (require.cache["./src/automation/channel_cleaning.js"]) delete require.cache["./src/automation/channel_cleaning.js"];
 });
 
 test("reactions", async () => {
@@ -136,12 +142,11 @@ test("reactions", async () => {
     client.on("messageReactionRemove", (reaction) => {
       res = reaction.message.reactions.size;
       resolve();
+      reject();
     });
     let guild = client.guilds.get("406797621563490315");
     let channel = guild.channels.find("type", "text");
-    let mid;
     channel.send("Reaction test.").then((message) => {
-      mid = message.id;
       message.react("😂").then(() => message.react("😏"));
     });
   });

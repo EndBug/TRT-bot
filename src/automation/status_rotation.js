@@ -29,11 +29,11 @@ var maintenance = [
 module.exports.name = "Status rotation";
 module.exports.run = () => {
   if (!config.maintenance) {
-    client.setPresence(status[is]);
+    client.user.setPresence(status[is]);
     is++;
     is %= status.length;
   } else {
-    client.setPresence(maintenance[im]);
+    client.user.setPresence(maintenance[im]);
     im++;
     im %= maintenance.length;
   }
