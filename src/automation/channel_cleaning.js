@@ -7,7 +7,7 @@ module.exports.clean = (curr, callback = () => {}) => {
     .then((messages) => {
       if (messages.size >= 100) module.exports.clean(curr);
       else {
-        setTimeout(() => module.exports.clean(curr), config.cleantime * 60 * 1000);
+        setTimeout(() => module.exports.clean(curr), config.cleantimeMin * 60 * 1000);
         setTimeout(() => callback(messages.size), 3000);
       }
     })

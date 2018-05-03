@@ -1,12 +1,31 @@
-/*global client Discord expect test*/
+/*global client Discord expect jest test*/
 global.Discord = require("discord.js");
 global.fetch = require("node-fetch");
+global.fs = require("fs");
 global.client = new Discord.Client();
+global.config = {
+  p: "."
+};
+global.PresenceStatuses = {
+  DND: "dnd",
+  IDLE: "idle",
+  INVISIBLE: "invisible",
+  ONLINE: "online"
+};
+global.ActivityTypes = {
+  LISTENING: "WATCHING",
+  PLAYING: "PLAYING",
+  STREAMING: "STREMING",
+  WATCHING: "WATCHING"
+};
+jest.setTimeout(10000);
+
 const token = `${process.env.TEST_TOKEN}`;
-jest.setTimeout(10000)
+
 const utils = require("./src/misc/utils.js");
 const channel_cleaning = require("./src/automation/channel_cleaning.js");
 const reactions = require("./src/automation/reactions.js");
+const status = require("./src/automation/status_rotation.js");
 
 Discord.GuildMember.prototype.hasRole = function(role) {
   if (role instanceof Discord.Role)
@@ -25,8 +44,13 @@ test("Name check & login", async () => {
   expect(utils.name).toBe("Utils");
   expect(channel_cleaning.name).toBe("Channel cleaning");
   expect(reactions.name).toBe("Reactions control");
+  expect(status.name).toBe("Status rotation");
 });
 
+test("tree", () => {
+  global.goGlobal = () => {};
+  require("./tree.js");
+});
 
 test("createArgs", () => {
   let message = new Discord.Message();
@@ -103,7 +127,7 @@ test("now", () => {
 
 test("clean", async () => {
   global.config = {
-    cleantime: 120
+    cleantimeMin: 120
   };
   let guild = client.guilds.get("406797621563490315");
   let channel = guild.channels.find("type", "text");
@@ -126,7 +150,6 @@ test("clean", async () => {
   });
   await p;
   expect(result).toBeLessThanOrEqual(100);
-
 });
 
 test("reactions", async () => {
@@ -136,17 +159,29 @@ test("reactions", async () => {
     client.on("messageReactionRemove", (reaction) => {
       res = reaction.message.reactions.size;
       resolve();
+      reject();
     });
     let guild = client.guilds.get("406797621563490315");
     let channel = guild.channels.find("type", "text");
-    let mid;
     channel.send("Reaction test.").then((message) => {
-      mid = message.id;
       message.react("😂").then(() => message.react("😏"));
     });
   });
   await p;
   expect(res).toBe(1);
+});
+
+test("status rotation", async () => {
+  global.config = {
+    p: ".",
+    maintenance: false,
+    statusSec: 709
+  };
+  status.run();
+  expect(client.user.presence.status).toBe("online");
+  global.config.maintenance = true;
+  status.run();
+  expect(client.user.presence.status).toBe("dnd");
 });
 
 //off, updateConfig & writeJSON not tested
