@@ -246,4 +246,6 @@ client.on("ready", () => {
   loadUtils();
 
   runModules();
+
+  owner.send(say("running"));
 });

@@ -30,6 +30,7 @@ module.exports = (name, v1, v2, v3) => {
     "rank-player": "User",
     "rank-staff": "Staff",
     "reload-help": "Reloads the bot.",
+    "running": "TRT Bot is running.",
     "test-help": "Custom test command",
     "welcome": `Welcome ${v1}! Look at the ${v2} channel to see how this server works ;)\nRemember that bot commands only work in ${v3}!`,
 
