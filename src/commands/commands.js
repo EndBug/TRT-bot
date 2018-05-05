@@ -48,7 +48,7 @@ module.exports.run = () => {
       member = message.member,
       channel = message.channel;
     if (inBlack(message)) message.delete().then(channels.staff.send(say("moderation-required", mention(author), mention(channel))));
-    else if (inInsta(message)) message.delete(5000);
+    else if (inInsta(message) || checkCommand(args[0])) message.delete(2500);
     else if ((config.maintenance && !maintenancePerm(member)) || channel != channels.bot || author.bot || !message.content.startsWith(config.p) || !checkCommand(args[0])) return;
     else {
       let command = checkCommand(args[0], true);
@@ -82,7 +82,7 @@ module.exports.run = () => {
           break;
 
         case commands.chat.help:
-          help(author, rank(member), commands).then(reply, (e) => error("commands.js", "help", e));
+          help(author, rank(member), commands.chat).then(reply, (e) => error("commands.js", "help", e));
           break;
 
         case commands.chat.info:

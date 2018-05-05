@@ -1,4 +1,10 @@
-module.exports = (name, v1, v2) => {
+module.exports = (name, v1, v2, v3) => {
+  let links = {
+    discordAPI: "https://discord.gg/discord-api",
+    discordjs: "https://discord.gg/bRCvFy9",
+    githubRepo: "https://github.com/EndBug/trt-bot"
+  };
+
   let messages = {
     "bot-reloading": "Bot is reloading...",
     "bot-reloaded": `--- Bot reloaded by ${v1} ---`,
@@ -13,7 +19,7 @@ module.exports = (name, v1, v2) => {
     "help-onepage": "There's only one help page.",
     "help-success": ":white_check_mark: I've just sent you a Direct Message :wink:",
     "info-help": "Sends infos about the bot.",
-    "info-msg": `TRT Bot has been built by ${v1} for the TRT server. It's made in Node.js, usign the Discord.js library. If you want to start developing bots, check this servers:\nhttps://discord.gg/discord-api\nhttps://discord.gg/bRCvFy9\nIf you want to check out this bot, go to https://github.com/EndBug/trt-bot (disclaimer: not a good coder, might not want to read that)`,
+    "info-msg": `TRT Bot has been built by ${v1} for the TRT server. It's made in Node.js, usign the Discord.js library. If you want to start developing bots, check this servers:\n${links.discordAPI}\n${links.discordjs}\nIf you want to check out this bot, go to ${links.githubRepo} (disclaimer: not a good coder, might not want to read that)`,
     "invite-help": "Replies with the invite for this server.",
     "invite-msg": "Share this link! ;)\nhttps://discord.gg/TJc4r9X",
     "maintenance-off": "Bot set in public mode.",
@@ -30,7 +36,9 @@ module.exports = (name, v1, v2) => {
     "rank-player": "User",
     "rank-staff": "Staff",
     "reload-help": "Reloads the bot.",
+    "running": "TRT Bot is running.",
     "test-help": "Custom test command",
+    "welcome": `Welcome ${v1}! Look at the ${v2} channel to see how this server works ;)\nRemember that bot commands only work in ${v3}!`,
 
     "test": `ok`
   };
