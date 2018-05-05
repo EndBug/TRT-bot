@@ -33,14 +33,6 @@ const modules = [
 
 
 var channels = {
-  general: {
-    name: "chat",
-    id: "266553379201875968"
-  },
-  staff: {
-    name: "staff",
-    id: "366301801722544128"
-  },
   admin: {
     name: "admins",
     id: "300606293721219072"
@@ -49,9 +41,21 @@ var channels = {
     name: "botchat",
     id: "300600162235973632"
   },
+  general: {
+    name: "chat",
+    id: "266553379201875968"
+  },
   nomic: {
     name: "muted-mic-texts",
     id: "377793122836414464"
+  },
+  rules: {
+    name: "rules",
+    id: "300598727935262720"
+  },
+  staff: {
+    name: "staff",
+    id: "366301801722544128"
   }
 };
 

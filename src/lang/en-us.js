@@ -1,4 +1,4 @@
-module.exports = (name, v1, v2) => {
+module.exports = (name, v1, v2, v3) => {
   let messages = {
     "bot-reloading": "Bot is reloading...",
     "bot-reloaded": `--- Bot reloaded by ${v1} ---`,
@@ -31,6 +31,7 @@ module.exports = (name, v1, v2) => {
     "rank-staff": "Staff",
     "reload-help": "Reloads the bot.",
     "test-help": "Custom test command",
+    "welcome": `Welcome ${v1}! Look at the ${v2} channel to see how this server works ;)\nRemember that bot commands only work in ${v3}!`,
 
     "test": `ok`
   };

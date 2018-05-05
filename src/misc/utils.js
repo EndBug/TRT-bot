@@ -42,6 +42,7 @@ module.exports.utils = {
     else return false;
   },
   mention: (element) => {
+    if (element instanceof Discord.GuildMember) element = element.user;
     if (element instanceof Discord.User) return `<@${element.id}>`;
     else if (element instanceof Discord.Channel) return `<#${element.id}>`;
     else return "<@invalid_user>";
