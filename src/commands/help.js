@@ -1,7 +1,7 @@
 /*global colors config Discord owner rankToString ranks say*/
 function getCommands(rank, all_commands) {
   let result = [];
-  for (let c of all_commands.values())
+  for (let c of Object.values(all_commands))
     if (rank >= c.rank(!c.hide || rank == ranks.DEV)) result.push(c);
   return result;
 }

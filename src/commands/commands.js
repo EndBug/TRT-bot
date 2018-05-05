@@ -82,7 +82,7 @@ module.exports.run = () => {
           break;
 
         case commands.chat.help:
-          help(author, rank(member), commands).then(reply, (e) => error("commands.js", "help", e));
+          help(author, rank(member), commands.chat).then(reply, (e) => error("commands.js", "help", e));
           break;
 
         case commands.chat.info:
