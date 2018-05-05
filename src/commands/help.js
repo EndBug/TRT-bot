@@ -2,7 +2,7 @@
 function getCommands(rank, all_commands) {
   let result = [];
   for (let c of Object.values(all_commands))
-    if (rank >= c.rank(!c.hide || rank == ranks.DEV)) result.push(c);
+    if (rank >= c.rank && (!c.hide || rank == ranks.DEV)) result.push(c);
   return result;
 }
 
