@@ -3,15 +3,13 @@
 module.exports.name = "Channel cleaning";
 
 module.exports.clean = (curr, callback = () => {}) => {
-  curr.bulkDelete(100, true)
-    .then((messages) => {
-      if (messages.size >= 100) module.exports.clean(curr);
-      else {
-        setTimeout(() => module.exports.clean(curr), config.cleantimeMin * 60 * 1000);
-        setTimeout(() => callback(messages.size), 3000);
-      }
-    })
-    .catch((e) => error("channel_cleaning.js", "run", e));
+  curr.fetchMessages().then((messages) => {
+    if (messages.size > 0) curr.bulkDelete(100, true).then(module.exports.clean(curr, callback)).catch((e) => error("channel_cleaning.js", "clean/bulkDelete", e));
+    else {
+      setTimeout(() => module.exports.clean(curr), config.cleantimeMin * 60 * 1000);
+      callback(messages.size);
+    }
+  }).catch((e) => error("channel_cleaning.js", "clean/fetchMessages", e));
 };
 
 module.exports.run = () => {
