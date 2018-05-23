@@ -138,23 +138,23 @@ function initRoles() {
 }
 
 function initWebhooks() {
-  for (let w in webhooks) {
-    let curr = webhooks[w];
-    let webhook;
-    guild.fetchWebhooks().then(ws => {
-      webhook = ws.find("name", curr.name);
-      if (webhook == undefined) {
-        error("app.js", "initWebhooks", `Webhook with name "${curr.name}" returns \`undefined\`, trying to use backup id.`);
-        webhook = ws.get(curr.id);
+    return guild.fetchWebhooks().then(ws => {
+      for (let w in webhooks) {
+        let curr = webhooks[w];
+        let webhook;
+        webhook = ws.find("name", curr.name);
         if (webhook == undefined) {
-          error("app.js", "initWebhooks", `Using fallback id "${curr.id}" returns \`undefined\`, stopping bot...`, () => {
-            throw new Error(`Using fallback id "${curr.id}" returns \`undefined\`, stopping bot...`);
-          });
+          error("app.js", "initWebhooks", `Webhook with name "${curr.name}" returns \`undefined\`, trying to use backup id.`);
+          webhook = ws.get(curr.id);
+          if (webhook == undefined) {
+            error("app.js", "initWebhooks", `Using fallback id "${curr.id}" returns \`undefined\`, stopping bot...`, () => {
+              throw new Error(`Using fallback id "${curr.id}" returns \`undefined\`, stopping bot...`);
+            });
+          }
         }
-      }
       webhooks[w] = webhook;
-    });
-  }
+    }
+  });
 }
 
 function runModules(exept = []) {
