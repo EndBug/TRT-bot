@@ -4,7 +4,7 @@ const fs = require("fs");
 const Twit = require("twit");
 
 const token = process.env.TOKEN;
-const twitter_api_key = process.env.TWITER_API_KEY;
+const twitter_api_key = process.env.TWITTER_API_KEY;
 const twitter_api_secret = process.env.TWITTER_API_SECRET;
 
 function goGlobal(obj) {
