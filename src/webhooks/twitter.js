@@ -38,7 +38,7 @@ module.exports.run = (force = 0) => {
       if (last instanceof Date) {
         for (let tweet of tweets) {
           let stamp = new Date(tweet.created_at);
-          if (stamp < last || (forced && force > 0)) {
+          if (stamp > last || (forced && force > 0)) {
             send(tweet);
           }
         }
