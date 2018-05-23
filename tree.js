@@ -11,6 +11,7 @@ const tree = {
   "reactions.js": "./src/automation/reactions.js",
   "reloadme.json": "./src/misc/reloadme.json",
   "status_rotation.js": "./src/automation/status_rotation.js",
+  "twitter.js": "./src/webhooks/twitter.js",
   "utils.js": "./src/misc/utils.js"
 };
 
