@@ -152,6 +152,7 @@ function initWebhooks() {
           });
         }
       }
+      webhooks[w] = webhook;
     });
   }
 }
