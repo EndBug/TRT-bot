@@ -32,7 +32,7 @@ module.exports.run = (force = 0) => {
     let tweets = data.statuses;
     let last;
     channels.twitter.fetchMessages({limit: 1}).then(messages => {
-      last = messages.first.createdAt;
+      last = messages.first().createdAt;
       if (last instanceof Date) {
         for (let tweet of tweets) {
           let stamp = new Date(tweet.created_at);
