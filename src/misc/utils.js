@@ -65,7 +65,7 @@ module.exports.utils = {
     return Math.floor(Math.random() * (max - min) + min);
   },
   twitterAccountsToQuery: (accounts = [], options = "") => {
-    let final = accounts.join(" OR ");
+    let final = `from:${accounts.join(" OR from:")}`;
     final += ` ${options}`;
     return final;
   },
