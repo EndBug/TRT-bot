@@ -1,8 +1,8 @@
 /*global channels config error Twit twitterAccountsToQuery twitter_api_key twitter_api_secret webhooks*/
 module.exports.name = "Twitter webhook";
 
-module.exports.run = (force = 0) => {
-  let forced = false;
+module.exports.run = (f = 0) => {
+  let forced = false, force = f;
   if (force > 0) forced = true;
   var T = new Twit({
     consumer_key: twitter_api_key,
