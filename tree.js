@@ -18,7 +18,7 @@ const tree = {
 if (!fs.existsSync(absolutePath(tree["reloadme.json"]))) fs.writeFile(absolutePath(tree["reloadme.json"]), JSON.stringify({
   date: ""
 }), (e) => {
-  throw new Error(e);
+  if (e != null) throw new Error(e);
 });
 
 function absolutePath(dir) {
