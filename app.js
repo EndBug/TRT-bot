@@ -288,5 +288,5 @@ client.on("ready", () => {
 
   runModules();
 
-  owner.send(say("running"));
+  owner.send(say("running")).then(m => m.delete(60000));
 });
