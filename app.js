@@ -138,7 +138,8 @@ function initRoles() {
 }
 
 function initWebhooks() {
-    return guild.fetchWebhooks().then(ws => {
+  return new Promise((resolve, reject) => {
+    guild.fetchWebhooks().then(ws => {
       for (let w in webhooks) {
         let curr = webhooks[w];
         let webhook;
@@ -147,13 +148,13 @@ function initWebhooks() {
           error("app.js", "initWebhooks", `Webhook with name "${curr.name}" returns \`undefined\`, trying to use backup id.`);
           webhook = ws.get(curr.id);
           if (webhook == undefined) {
-            error("app.js", "initWebhooks", `Using fallback id "${curr.id}" returns \`undefined\`, stopping bot...`, () => {
-              throw new Error(`Using fallback id "${curr.id}" returns \`undefined\`, stopping bot...`);
-            });
+            reject(`Using fallback id "${curr.id}" returns \`undefined\`, stopping bot...`);
           }
         }
-      webhooks[w] = webhook;
-    }
+        webhooks[w] = webhook;
+      }
+      resolve();
+    });
   });
 }
 
@@ -260,34 +261,40 @@ client.on("ready", () => {
 
   initChannels();
   initRoles();
-  initWebhooks();
-
-  let to_global = Object.assign(
-    ranks,
-    PresenceStatuses,
-    ActivityTypes, {
-      ActivityTypes,
-      channels,
-      client,
-      colors,
-      Command,
-      commands,
-      config,
-      error,
-      guild,
-      owner,
-      PresenceStatuses,
+  initWebhooks().then(() => {
+    let to_global = Object.assign(
       ranks,
-      roles,
-      say,
-      webhooks
-    }
-  );
-  goGlobal(to_global);
+      PresenceStatuses,
+      ActivityTypes, {
+        ActivityTypes,
+        channels,
+        client,
+        colors,
+        Command,
+        commands,
+        config,
+        error,
+        guild,
+        owner,
+        PresenceStatuses,
+        ranks,
+        roles,
+        say,
+        webhooks
+      }
+    );
+    goGlobal(to_global);
 
-  loadUtils();
+    loadUtils();
 
-  runModules();
+    runModules();
 
-  owner.send(say("running")).then(m => m.delete(60000));
+    owner.send(say("running")).then(m => m.delete(60000));
+  }).catch((e, t = false) => {
+    let f = () => {};
+    if (t) f = () => {
+      throw new Error(e);
+    };
+    error("app.js", "initWebhooks", e, f);
+  });
 });

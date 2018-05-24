@@ -1,9 +1,7 @@
 /*global channels config error Twit twitterAccountsToQuery twitter_api_key twitter_api_secret webhooks*/
 module.exports.name = "Twitter webhook";
 
-module.exports.run = (f = 0) => {
-  let forced = false, force = f;
-  if (force > 0) forced = true;
+module.exports.run = (force = 0) => {
   var T = new Twit({
     consumer_key: twitter_api_key,
     consumer_secret: twitter_api_secret,
@@ -15,12 +13,10 @@ module.exports.run = (f = 0) => {
   var hook = webhooks.twitter;
 
   let send = (tweet) => {
-    hook.send(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`, {
+    return hook.send(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`, {
       username: tweet.user.name,
       avatarURL: tweet.user.profile_image_url
-    }).then(() => {
-      force--;
-    }).catch(e => error("twitter.js", "hook.send", e));
+    });
   };
 
   T.get("search/tweets", {
@@ -33,16 +29,28 @@ module.exports.run = (f = 0) => {
     }
     let tweets = data.statuses;
     let last;
-    channels.twitter.fetchMessages({limit: 1}).then(messages => {
+    channels.twitter.fetchMessages({
+      limit: 1
+    }).then(messages => {
       last = messages.first().createdAt;
       if (last instanceof Date) {
-        for (let tweet of tweets) {
+        let t = tweets.length - 1;
+        let go = () => {
+          let tweet = tweets[t];
           let stamp = new Date(tweet.created_at);
-          if (stamp > last || (forced && force > 0)) {
-            send(tweet);
+          if (stamp > last || force > 0) {
+            send(tweet).then(() => {
+              t--;
+              force--;
+              if (t >= 0) go();
+            }).catch(e => error("twitter.js", "hook.send", e));
+          } else {
+            t--;
+            if (t >= 0) go();
           }
-        }
-        setTimeout(module.exports.run, settings.refreshMin*60000);
+        };
+        go();
+        setTimeout(module.exports.run, settings.refreshMin * 60000);
       } else error("twitter.js", "TextChannel.fetchMessages", `Message.createdAt is not a date:\n${last}`);
     }).catch(e => error("twitter.js", "TextChannel.fetchMessages", e));
   });
