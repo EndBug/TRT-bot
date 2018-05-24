@@ -33,6 +33,10 @@ function inInsta(message) {
   return false;
 }
 
+global.localPath = (p = "") => {
+  return `../../${p}`;
+};
+
 module.exports.run = () => {
   // client.on("commands-ready", () => {
   client.on("message", (message) => {

@@ -4,8 +4,11 @@ module.exports.name = "Utils";
 module.exports.utils = {
   createArgs: (message) => {
     if (!(message instanceof Discord.Message)) return ["Invalid", "message"];
-    let store = message.content.substring(config.p.length).split(" ");
+    let store = message.content.substring(config.p.length).split(/([ \n])+/g);
     while (store[0] == '') store.shift();
+    store = store.filter(function(a) {
+      return (a !== '\n' && a !== " ");
+    });
     if (store.length == 0) store.push("");
     return store;
   },
@@ -47,12 +50,24 @@ module.exports.utils = {
     else if (element instanceof Discord.Channel) return `<#${element.id}>`;
     else return "<@invalid_user>";
   },
+  mentionToID: (str) => {
+    return str.replace(/[\\<>@#&!]/, "");
+  },
   now: () => {
     return new Date();
   },
   off: () => {
     client.destroy((err) => console.log(err));
     process.exit();
+  },
+  randomInt: (min, max) => {
+    max += 0.001;
+    return Math.floor(Math.random() * (max - min) + min);
+  },
+  twitterAccountsToQuery: (accounts = [], options = "") => {
+    let final = `from:${accounts.join(" OR from:")}`;
+    final += ` ${options}`;
+    return final;
   },
   updateConfig: () => {
     module.exports.utils.writeJSON(absolutePath(tree["config.json"]), config);

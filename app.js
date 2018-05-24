@@ -1,18 +1,27 @@
 /*global tree*/
 const Discord = require("discord.js");
 const fs = require("fs");
+const Twit = require("twit");
+
+const token = process.env.TOKEN;
+const twitter_api_key = process.env.TWITTER_API_KEY;
+const twitter_api_secret = process.env.TWITTER_API_SECRET;
 
 function goGlobal(obj) {
   for (let key in obj) global[key] = obj[key];
 }
 
 goGlobal({
+  Discord,
   fs,
+  token,
+  Twit,
+  twitter_api_key,
+  twitter_api_secret,
   goGlobal
 });
 require("./tree.js");
 
-const token = process.env.TOKEN;
 const config = require(tree["config.json"]);
 const client = new Discord.Client();
 var guild, owner;
@@ -28,7 +37,8 @@ const modules = [
   tree["commands.js"],
   tree["new_member.js"],
   tree["reactions.js"],
-  tree["status_rotation.js"]
+  tree["status_rotation.js"],
+  tree["twitter.js"]
 ];
 
 
@@ -56,6 +66,10 @@ var channels = {
   staff: {
     name: "staff",
     id: "366301801722544128"
+  },
+  twitter: {
+    name: "tweets",
+    id: "440216656959111168"
   }
 };
 
@@ -75,6 +89,13 @@ var roles = {
   developer: {
     name: "Developers",
     id: "385532005640699915"
+  }
+};
+
+var webhooks = {
+  twitter: {
+    name: "Twitter webhook",
+    id: "440162684714090496"
   }
 };
 
@@ -114,6 +135,27 @@ function initRoles() {
     }
     roles[r] = role;
   }
+}
+
+function initWebhooks() {
+  return new Promise((resolve, reject) => {
+    guild.fetchWebhooks().then(ws => {
+      for (let w in webhooks) {
+        let curr = webhooks[w];
+        let webhook;
+        webhook = ws.find("name", curr.name);
+        if (webhook == undefined) {
+          error("app.js", "initWebhooks", `Webhook with name "${curr.name}" returns \`undefined\`, trying to use backup id.`);
+          webhook = ws.get(curr.id);
+          if (webhook == undefined) {
+            reject(`Using fallback id "${curr.id}" returns \`undefined\`, stopping bot...`);
+          }
+        }
+        webhooks[w] = webhook;
+      }
+      resolve();
+    });
+  });
 }
 
 function runModules(exept = []) {
@@ -219,33 +261,40 @@ client.on("ready", () => {
 
   initChannels();
   initRoles();
-
-  let to_global = Object.assign(
-    ranks,
-    PresenceStatuses,
-    ActivityTypes, {
-      ActivityTypes,
-      channels,
-      client,
-      colors,
-      Command,
-      commands,
-      config,
-      Discord,
-      error,
-      guild,
-      owner,
-      PresenceStatuses,
+  initWebhooks().then(() => {
+    let to_global = Object.assign(
       ranks,
-      roles,
-      say
-    }
-  );
-  goGlobal(to_global);
+      PresenceStatuses,
+      ActivityTypes, {
+        ActivityTypes,
+        channels,
+        client,
+        colors,
+        Command,
+        commands,
+        config,
+        error,
+        guild,
+        owner,
+        PresenceStatuses,
+        ranks,
+        roles,
+        say,
+        webhooks
+      }
+    );
+    goGlobal(to_global);
 
-  loadUtils();
+    loadUtils();
 
-  runModules();
+    runModules();
 
-  owner.send(say("running"));
+    owner.send(say("running")).then(m => m.delete(60000));
+  }).catch((e, t = false) => {
+    let f = () => {};
+    if (t) f = () => {
+      throw new Error(e);
+    };
+    error("app.js", "initWebhooks", e, f);
+  });
 });

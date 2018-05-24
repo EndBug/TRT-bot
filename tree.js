@@ -11,13 +11,14 @@ const tree = {
   "reactions.js": "./src/automation/reactions.js",
   "reloadme.json": "./src/misc/reloadme.json",
   "status_rotation.js": "./src/automation/status_rotation.js",
+  "twitter.js": "./src/webhooks/twitter.js",
   "utils.js": "./src/misc/utils.js"
 };
 
 if (!fs.existsSync(absolutePath(tree["reloadme.json"]))) fs.writeFile(absolutePath(tree["reloadme.json"]), JSON.stringify({
   date: ""
 }), (e) => {
-  throw new Error(e);
+  if (e != null) throw new Error(e);
 });
 
 function absolutePath(dir) {

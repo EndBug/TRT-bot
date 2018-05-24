@@ -1,1 +1,22 @@
-{"p":".","maintenance":false,"lang":"en-us","cleantimeMin": 60, "statusSec": 10, "ids":{"owner":"218308478580555777"}}
+{
+  "cleantimeMin": 60,
+  "ids": {
+    "owner": "218308478580555777"
+  },
+  "p": ".",
+  "lang": "en-us",
+  "maintenance": false,
+  "statusSec": 10,
+  "webhooks": {
+    "twitter": {
+      "options": "-filter:replies -filter:nativeretweets",
+      "refreshMin": 1,
+      "targets": [
+        "discordapp",
+        "FortniteGame",
+        "PlayOverwatch",
+        "PlayWarframe"
+      ]
+    }
+  }
+}
