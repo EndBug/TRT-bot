@@ -43,7 +43,7 @@ module.exports.run = (force = 0) => {
             send(tweet).then(() => {
               t--;
               force--;
-              if (t >= 0) go();
+              if (t >= 0 && (!forced || (forced && force > 0))) go();
             }).catch(e => error("twitter.js", "hook.send", e));
           } else {
             t--;
