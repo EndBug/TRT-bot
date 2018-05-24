@@ -2,6 +2,7 @@
 module.exports.name = "Twitter webhook";
 
 module.exports.run = (force = 0) => {
+  let forced = (force != 0);
   var T = new Twit({
     consumer_key: twitter_api_key,
     consumer_secret: twitter_api_secret,
@@ -50,7 +51,7 @@ module.exports.run = (force = 0) => {
           }
         };
         go();
-        setTimeout(module.exports.run, settings.refreshMin * 60000);
+        if (!forced) setTimeout(module.exports.run, settings.refreshMin * 60000);
       } else error("twitter.js", "TextChannel.fetchMessages", `Message.createdAt is not a date:\n${last}`);
     }).catch(e => error("twitter.js", "TextChannel.fetchMessages", e));
   });
