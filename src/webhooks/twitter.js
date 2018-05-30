@@ -25,14 +25,13 @@ module.exports.run = (force = 0) => {
     count: 25
   }, (err, data) => {
     if (err) {
-      let retryErrs = [
-        "Error: Unexpected reply from Twitter upon obtaining bearer token"
-      ];
-      if (retryErrs.includes(err)) setTimeout(module.exports.run, 600000 /*10 mins*/ );
-      else {
-        error("twitter.js", "get search/tweets", err);
-        setTimeout(module.exports.run, settings.refreshMin * 60000);
-      }
+      let ignore = [
+          "Error: Unexpected reply from Twitter upon obtaining bearer token"
+        ],
+        f;
+      if (!ignore.includes(err)) f = (m) => m.delete(10000);
+      error("twitter.js", "get search/tweets", err, f);
+      setTimeout(module.exports.run, settings.refreshMin * 60000);
     } else {
       let tweets = data.statuses;
       let last;
