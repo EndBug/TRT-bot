@@ -7,6 +7,7 @@ const tree = {
   "config.json": "./src/settings/config.json",
   "en-us.js": "./src/lang/en-us.js",
   "help.js": "./src/commands/help.js",
+  "music_commands.js": "./src/music/music_commands.js",
   "new_member.js": "./src/automation/new_member.js",
   "reactions.js": "./src/automation/reactions.js",
   "reloadme.json": "./src/misc/reloadme.json",

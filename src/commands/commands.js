@@ -1,19 +1,33 @@
-/*global absolutePath channels client commands config createArgs Discord error getFullName maintenancePerm mention off rank ranks tree now owner roles say updateConfig writeJSON*/
+/*global absolutePath channels client commands config createArgs Discord error getFullName guild maintenancePerm mention off rank ranks tree now owner roles say updateConfig writeJSON*/
 module.exports.name = "Commands";
 
 const help = require("./help.js");
 
-function checkCommand(str, getMode = false) {
-  let c, found = false;
-  for (let command of Object.values(commands.chat))
+function checkCommand(str, getMode = false, type = "all") {
+  let c, found = false,
+    all = false;
+  if (type == "all") {
+    all = true;
+    type = "chat";
+  }
+  for (let command of Object.values(commands[type]))
     if (str.toLowerCase() == command.name) {
       c = command;
       found = true;
       break;
     }
-
+  if (all && !found) {
+    found = found || checkCommand(str, false, "music");
+    if (found) c = checkCommand(str, true, "music");
+  }
   if (getMode) return c;
   else return found;
+}
+
+function isDJ(id) {
+  for (let curr of config.ids.djs)
+    if (curr == id) return true;
+  return false;
 }
 
 var blacklist = [];
@@ -57,7 +71,7 @@ module.exports.run = () => {
     else {
       let command = checkCommand(args[0], true);
       if (rank(member) < command.rank || (command.hide && rank(member) != ranks.DEV)) reply(say("err-lack-of-perms", rank(member), command.rank));
-      else switch (command) {
+      else if (checkCommand(command.name, false, "chat")) switch (command) {
         case commands.chat.dev:
           if (!config.maintenance) reply(say("maintenance-on"));
           else reply(say("maintenance-off"));
@@ -125,6 +139,39 @@ module.exports.run = () => {
         case commands.chat.test:
           reply(`Debug test: \nRank: ${rank(message.member)} \nHasDev: ${member.hasRole(roles.developer)}`);
           break;
+      } else {
+        let vchannel = member.voiceChannel,
+          id;
+        if (vchannel != undefined)
+          for (let m of vchannel.members.array()) {
+            if (isDJ(m.id)) {
+              id = m.id;
+              break;
+            }
+          }
+        if (vchannel == undefined) reply(say("err-no-voice"));
+        else if (id == undefined) {
+          if (command != commands.music.play && command.name != commands.music.join) reply(say("err-no-music", commands.music.play.name, commands.music.join.name));
+          else {
+            let member = undefined;
+            for (let id of config.ids.djs) {
+              let dj = guild.members.get(id);
+              if (dj == undefined) error("commands.js", "assign-dj", "member is undefined");
+              else if (dj.voiceChannel == undefined) {
+                member = dj;
+                break;
+              }
+            }
+            if (member == undefined) reply(say("music-nodj"));
+            else id = member.user.id;
+          }
+        }
+
+        if (id != undefined) {
+          let dj = guild.members.get(id);
+          let str = `${mention(dj)}\n${author.id}\n${args.join(" ")}`;
+          reply(str);
+        }
       }
     }
   });

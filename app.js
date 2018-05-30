@@ -172,16 +172,6 @@ function loadUtils() {
   goGlobal(mod.utils);
 }
 
-class Command {
-  constructor(permission = ranks.PLAYER, name = "", syntax = "", description = "", hidden = false) {
-    this.name = name;
-    this.syn = syntax;
-    this.des = description;
-    this.rank = permission;
-    this.hide = hidden;
-  }
-}
-
 Discord.GuildMember.prototype.hasRole = function(role) {
   if (role instanceof Discord.Role)
     for (let r of this.roles.array())
@@ -217,6 +207,12 @@ var ActivityTypes = {
   WATCHING: "WATCHING"
 };
 
+goGlobal({
+  ranks
+});
+const music_commands = require(tree["music_commands.js"]);
+var Command = music_commands.class;
+
 var commands = {
   chat: {
     help: new Command(ranks.PLAYER, "help", "help", say("help-help")),
@@ -240,14 +236,7 @@ var commands = {
     reload: new Command(ranks.ADMIN, "reload", "reload", say("reload-help")),
     test: new Command(ranks.DEV, "test", "test", say("test-help"))
   },
-  music: {
-    // play: new Command(ranks.PLAYER, "play", "play <YouTube link || Search term>", "Adds a video (or livestream) to the queue. If you are in a voice channel the bot will join it, if the queue is empty it will automatically start playing.", true),
-    // pause: new Command(ranks.PLAYER, "pause", "pause", "Pauses the stream.", true),
-    // stop: new Command(ranks.PLAYER, "stop", "stop", "Stops the music and clears the queue.", true),
-    // join: new Command(ranks.PLAYER, "join", "join", "Joins your voice channel.", true),
-    // skip: new Command(ranks.PLAYER, "skip", "skip", "Skips current song.", true),
-    // test: new Command(ranks.DEV, "mtest", "mtest", "Music test command")
-  }
+  music: music_commands.obj
 };
 
 
