@@ -100,7 +100,7 @@ var webhooks = {
 };
 
 function error(file, f, message, callback = () => {}) {
-  owner.send(`**ERROR:**\n\`${file}\` > \`${f}\`\n*${message}*`).then(callback());
+  owner.send(`**ERROR:**\n\`${file}\` > \`${f}\`\n*${message}*`).then((m) => callback(m));
 }
 
 function initChannels() {
