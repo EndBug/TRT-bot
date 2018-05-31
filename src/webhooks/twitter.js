@@ -26,11 +26,10 @@ module.exports.run = (force = 0) => {
   }, (err, data) => {
     if (err) {
       let ignore = [
-          "Error: Unexpected reply from Twitter upon obtaining bearer token"
-        ],
-        f;
-      if (!ignore.includes(err)) f = (m) => m.delete(10000);
-      error("twitter.js", "get search/tweets", err, f);
+        "Error: Unexpected reply from Twitter upon obtaining bearer token"
+      ];
+      if (!ignore.includes(err)) console.log(`[WEBHOOKS/TWITTER] Ignored Twitter error: ${err}`);
+      else error("twitter.js", "get search/tweets", err);
       setTimeout(module.exports.run, settings.refreshMin * 60000);
     } else {
       let tweets = data.statuses;
