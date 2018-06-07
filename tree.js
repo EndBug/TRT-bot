@@ -15,7 +15,7 @@ const tree = {
   "utils.js": "./src/misc/utils.js"
 };
 
-if (!fs.existsSync(absolutePath(tree["reloadme.json"]))) fs.writeFile(absolutePath(tree["reloadme.json"]), JSON.stringify({
+if (!fs.existsSync(absolutePath(tree["reloadme.json"]))) fs.writeFileSync(absolutePath(tree["reloadme.json"]), JSON.stringify({
   date: ""
 }), (e) => {
   if (e != null) throw new Error(e);
