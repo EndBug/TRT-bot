@@ -2,6 +2,7 @@
 const Discord = require("discord.js");
 const fs = require("fs");
 const Twit = require("twit");
+const branch = require("git-branch").sync();
 
 const token = process.env.TOKEN;
 const twitter_api_key = process.env.TWITTER_API_KEY;
@@ -12,6 +13,7 @@ function goGlobal(obj) {
 }
 
 goGlobal({
+  branch,
   Discord,
   fs,
   token,
@@ -258,6 +260,7 @@ client.on("debug", (d) => console.info(d));
 client.on("ready", () => {
   guild = client.guilds.array()[0];
   owner = guild.members.get(config.ids.owner);
+  guild.members.get(client.user.id).setNickname("");
 
   initChannels();
   initRoles();

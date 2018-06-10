@@ -1,4 +1,4 @@
-/*global ActivityTypes client config PresenceStatuses*/
+/*global ActivityTypes branch client config guild PresenceStatuses*/
 
 class Presence {
   constructor(name = "", type = ActivityTypes.PLAYING, status = PresenceStatuses.ONLINE, stream = "") {
@@ -39,8 +39,12 @@ module.exports.run = () => {
     im %= maintenance.length;
   }
   client.user.setStatus(curr.status);
+
   client.user.setActivity(curr.game.name, {
     type: curr.game.type
   });
+
+  if (branch != "master") guild.members.get(client.user.id).setNickname(`TRT Bot β [${branch}]`, `Beta branch detected in code: ${branch}`);
+
   setTimeout(module.exports.run, config.statusSec * 1000);
 };
