@@ -2,7 +2,8 @@
 const Discord = require("discord.js");
 const fs = require("fs");
 const Twit = require("twit");
-const branch = require("git-branch").sync();
+var branch = "master";
+if (process.env.NODE_HOME != "/app/.heroku/node") branch = require("git-branch").sync(); //does not work in Heroku, but in Heroku only the master branch is deployed
 
 const token = process.env.TOKEN;
 const twitter_api_key = process.env.TWITTER_API_KEY;

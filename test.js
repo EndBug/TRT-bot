@@ -2,7 +2,8 @@
 global.Discord = require("discord.js");
 global.fetch = require("node-fetch");
 global.fs = require("fs");
-global.branch = require("git-branch").sync();
+global.branch = "master";
+if (process.env.NODE_HOME != "/app/.heroku/node") global.branch = require("git-branch").sync(); //does not work in Heroku, but in Heroku only the master branch is deployed
 global.client = new Discord.Client();
 global.config = {
   p: "."
