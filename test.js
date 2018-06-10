@@ -1,4 +1,4 @@
-/*global client Discord expect jest test*/
+/*global client Discord expect guild jest test*/
 global.Discord = require("discord.js");
 global.fetch = require("node-fetch");
 global.fs = require("fs");
@@ -28,6 +28,7 @@ const channel_cleaning = require("./src/automation/channel_cleaning.js");
 const reactions = require("./src/automation/reactions.js");
 const status = require("./src/automation/status_rotation.js");
 
+
 Discord.GuildMember.prototype.hasRole = function(role) {
   if (role instanceof Discord.Role)
     for (let r of this.roles.array())
@@ -41,6 +42,8 @@ test("Name check & login", async () => {
     client.on("ready", () => resolve());
   });
   await p;
+
+  global.guild = client.guilds.get("406797621563490315");
 
   expect(utils.name).toBe("Utils");
   expect(channel_cleaning.name).toBe("Channel cleaning");
@@ -75,7 +78,6 @@ test("getShortName", () => {
 });
 
 test("rank", () => {
-  let guild = client.guilds.get("406797621563490315");
   let member = guild.members.get(client.user.id),
     role_1 = guild.roles.find("name", "role_1");
   global.roles = {
@@ -103,7 +105,6 @@ test("rankToString", () => {
 });
 
 test("maintenancePerm", () => {
-  let guild = client.guilds.get("406797621563490315");
   let member = guild.members.get(client.user.id),
     role_1 = guild.roles.find("name", "role_1");
   global.roles = {
@@ -114,7 +115,6 @@ test("maintenancePerm", () => {
 });
 
 test("mention", () => {
-  let guild = client.guilds.get("406797621563490315");
   let user = client.user,
     channel = guild.channels.find("type", "text");
   expect(utils.utils.mention(user)).toBe(`<@${user.id}>`);
@@ -130,7 +130,6 @@ test("clean", async () => {
   global.config = {
     cleantimeMin: 120
   };
-  let guild = client.guilds.get("406797621563490315");
   let channel = guild.channels.find("type", "text");
   let i = 0;
   global.error = console.log;
@@ -162,7 +161,6 @@ test("reactions", async () => {
       resolve();
       reject();
     });
-    let guild = client.guilds.get("406797621563490315");
     let channel = guild.channels.find("type", "text");
     channel.send("Reaction test.").then((message) => {
       message.react("😂").then(() => message.react("😏"));
