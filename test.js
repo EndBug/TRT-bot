@@ -2,6 +2,7 @@
 global.Discord = require("discord.js");
 global.fetch = require("node-fetch");
 global.fs = require("fs");
+global.branch = require("git-branch").sync();
 global.client = new Discord.Client();
 global.config = {
   p: "."
