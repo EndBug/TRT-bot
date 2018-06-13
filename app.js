@@ -180,7 +180,9 @@ function runModules(exept = []) {
 
 function loadSettings() {
   let mod = require(tree["settings.js"]);
-  goGlobal(mod);
+  goGlobal({
+    settings: mod
+  });
 }
 
 function loadUtils() {
