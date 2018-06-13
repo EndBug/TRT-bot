@@ -20,6 +20,10 @@ function find(arr, row, col) {
   };
 }
 
+global.debugMe = (str) => {
+  eval(str);
+};
+
 module.exports.run = () => {
   doc.useServiceAccountAuth({
     client_email: googles.email,
