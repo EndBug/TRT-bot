@@ -39,29 +39,35 @@ module.exports.run = () => {
 };
 
 module.exports.get = (name, rows = 100, empty = false) => {
-  if (!Object.keys(worksheets).includes(name)) error("settings.js", "get", `Name is not included: ${name}`);
-  else {
-    let sheet = worksheets[name];
-    sheet.getCells({
-      "max-col": 2,
-      "min-row": 2,
-      "max-row": rows,
-      "return-empty": empty
-    }, (err, cells) => {
-      if (err) error("settings.js", "sheet.getCells", err);
-      else {
-        let res = {};
-        for (let cell of cells) {
-          if (cell.col == 1) {
-            let key = cell.value,
-              value = find(cells, cell.row, cell.col).value;
-            res[key] = value;
+  return new Promise((resolve, reject) => {
+    if (!Object.keys(worksheets).includes(name)) {
+      error("settings.js", "get", `Name is not included: ${name}`);
+      reject();
+    } else {
+      let sheet = worksheets[name];
+      sheet.getCells({
+        "max-col": 2,
+        "min-row": 2,
+        "max-row": rows,
+        "return-empty": empty
+      }, (err, cells) => {
+        if (err) {
+          error("settings.js", "sheet.getCells", err);
+          reject(err);
+        } else {
+          let res = {};
+          for (let cell of cells) {
+            if (cell.col == 1) {
+              let key = cell.value,
+                value = find(cells, cell.row, cell.col + 1).value;
+              res[key] = value;
+            }
           }
+          resolve(res);
         }
-        return res;
-      }
-    });
-  }
+      });
+    }
+  });
 };
 
 module.exports.set = (name, obj) => {
@@ -86,6 +92,7 @@ module.exports.set = (name, obj) => {
             v.value = obj[key];
             k.save();
             v.save();
+            index++;
           }
         }
       }

@@ -7,9 +7,9 @@ var branch = "master";
 if (process.env.NODE_HOME != "/app/.heroku/node") branch = require("git-branch").sync(); //does not work in Heroku, but in Heroku only the master branch is deployed
 
 const googles = {
-  email: process.env.GOOGLES_CLIENT_EMAIL,
-  key: process.env.GOOGLES_PRIVATE_KEY,
-  sheet: process.env.GOOGLES_SHEET_KEY
+  email: process.env.GOOGLE_CLIENT_EMAIL,
+  key: process.env.GOOGLE_PRIVATE_KEY,
+  sheet: process.env.GOOGLE_SHEET_KEY
 };
 const token = process.env.TOKEN;
 const twitter_api_key = process.env.TWITTER_API_KEY;
@@ -183,6 +183,7 @@ function loadSettings() {
   goGlobal({
     settings: mod
   });
+  mod.run();
 }
 
 function loadUtils() {
