@@ -1,10 +1,16 @@
 /*global tree*/
 const Discord = require("discord.js");
 const fs = require("fs");
+const GoogleSpreadsheet = require("google-spreadsheet");
 const Twit = require("twit");
 var branch = "master";
 if (process.env.NODE_HOME != "/app/.heroku/node") branch = require("git-branch").sync(); //does not work in Heroku, but in Heroku only the master branch is deployed
 
+const googles = {
+  email: process.env.GOOGLE_CLIENT_EMAIL,
+  key: process.env.GOOGLE_PRIVATE_KEY,
+  sheet: process.env.GOOGLE_SHEET_KEY
+};
 const token = process.env.TOKEN;
 const twitter_api_key = process.env.TWITTER_API_KEY;
 const twitter_api_secret = process.env.TWITTER_API_SECRET;
@@ -17,6 +23,8 @@ goGlobal({
   branch,
   Discord,
   fs,
+  GoogleSpreadsheet,
+  googles,
   token,
   Twit,
   twitter_api_key,
@@ -170,6 +178,14 @@ function runModules(exept = []) {
   }
 }
 
+function loadSettings() {
+  let mod = require(tree["settings.js"]);
+  goGlobal({
+    settings: mod
+  });
+  mod.run();
+}
+
 function loadUtils() {
   let mod = require(tree["utils.js"]);
   goGlobal(mod.utils);
@@ -262,6 +278,8 @@ client.on("ready", () => {
   guild = client.guilds.array()[0];
   owner = guild.members.get(config.ids.owner);
   guild.members.get(client.user.id).setNickname("");
+
+  loadSettings();
 
   initChannels();
   initRoles();
