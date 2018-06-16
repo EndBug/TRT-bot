@@ -21,15 +21,20 @@ function find(arr, row, col) {
 }
 
 module.exports.run = () => {
-  doc.useServiceAccountAuth({
-    client_email: googles.email,
-    private_key: googles.key
-  }, () => {
-    doc.getInfo((err, info) => {
-      if (err) error("settings.js", "doc.getInfo", err);
-      else {
-        for (let sheet of info.worksheets) worksheets[sheet.title] = sheet;
-      }
+  return new Promise((resolve, reject) => {
+    doc.useServiceAccountAuth({
+      client_email: googles.email,
+      private_key: googles.key
+    }, () => {
+      doc.getInfo((err, info) => {
+        if (err) {
+          error("settings.js", "doc.getInfo", err);
+          reject(err);
+        } else {
+          for (let sheet of info.worksheets) worksheets[sheet.title] = sheet;
+          resolve();
+        }
+      });
     });
   });
 };
