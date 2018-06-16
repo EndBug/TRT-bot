@@ -53,7 +53,10 @@ function findGame(emoji) {
 
 function updateMessage(id) {
   for (let game of games) game.updatePeople();
-  channel.fetchMessage(id).then(msg => msg.edit(createMessage()));
+  channel.fetchMessage(id).then(msg => {
+    if (msg != undefined) msg.edit(createMessage());
+    else channel.send("Rebuilding...").then(nmsg => nmsg.edit(createMessage()));
+  });
 }
 
 module.exports.run = () => {
@@ -76,10 +79,13 @@ module.exports.run = () => {
 
     settings.get("messages").then(obj => {
       let id = obj.games;
-      channel.send("Rebuilding...").then(message => {
-        if (id == undefined) id = message.id;
-        else message.delete();
-
+      new Promise((resolve) => {
+        if (id == undefined) channel.send(say("game-build")).then(msg => {
+          id = msg.id;
+          resolve();
+        });
+        else resolve();
+      }).then(() => {
         if (id != obj.games) settings.set("messages", {
           games: id
         });
@@ -87,9 +93,12 @@ module.exports.run = () => {
         channel.fetchMessage(id).then(msg => {
           msg.edit(createMessage());
           msg.clearReactions().then(() => {
-            for (let game of games) {
-              msg.react(game.emoji);
-            }
+            let c = 0;
+            let go = () => msg.react(games[c].emoji).then(() => {
+              c++;
+              if (c < games.length) go();
+            });
+            go();
           });
         });
 
@@ -112,7 +121,7 @@ module.exports.run = () => {
         });
 
         client.on("message", message => {
-          message.delete(5000);
+          if (message.channel == channel) message.delete(5000);
         });
       });
     });

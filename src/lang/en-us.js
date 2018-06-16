@@ -15,6 +15,7 @@ module.exports = (name, v1, v2, v3) => {
     "err-undef-arg": `[ERR] Argument(s) number \`${v1}\` are undefined.`,
     "eval-help": "Runs code from messages.",
     "game-msg": "React with the emojis to get the role:",
+    "game-build": "Building...",
     "help-author": `TRT Bot Command help - ${v1}`,
     "help-comingsoon": "Coming soon...",
     "help-help": "Shows this page.",
