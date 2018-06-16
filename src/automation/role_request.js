@@ -63,6 +63,7 @@ function findGame(emoji) {
 
 function updateMessage(id) {
   for (let game of games) game.updatePeople();
+  sortGames();
   channel.fetchMessage(id).then(msg => {
     if (msg != undefined) msg.edit(createMessage());
     else channel.send("Rebuilding...").then(nmsg => nmsg.edit(createMessage()));
