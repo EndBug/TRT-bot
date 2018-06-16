@@ -87,9 +87,12 @@ module.exports.run = () => {
         channel.fetchMessage(id).then(msg => {
           msg.edit(createMessage());
           msg.clearReactions().then(() => {
-            for (let game of games) {
-              msg.react(game.emoji);
-            }
+            let c = 0;
+            let go = () => msg.react(games[c].emoji).then(() => {
+              c++;
+              if (c < games.length) go();
+            });
+            go();
           });
         });
 
