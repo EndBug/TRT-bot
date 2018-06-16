@@ -158,10 +158,7 @@ class Command {
 }
 
 Discord.GuildMember.prototype.hasRole = function(role) {
-  if (role instanceof Discord.Role)
-    for (let r of this.roles.array())
-      if (r == role) return true;
-  return false;
+  return (role instanceof Discord.Role && this.roles.array().includes(role));
 };
 
 var ranks = {
