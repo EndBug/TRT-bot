@@ -69,6 +69,7 @@ goGlobal({
 
 function initChannels() {
   return settings.get("channels").then((obj) => {
+    console.log("[LOADER] Initializing channels...");
     for (let c in obj) {
       let id = obj[c];
       let channel = guild.channels.get(id);
@@ -87,6 +88,7 @@ function initChannels() {
 
 function initRoles() {
   return settings.get("roles").then((obj) => {
+    console.log("[LOADER] Initializing roles...");
     for (let r in obj) {
       let id = obj[r];
       let role = guild.roles.get(id);
@@ -105,6 +107,7 @@ function initRoles() {
 
 function initWebhooks() {
   return new Promise((resolve, reject) => {
+    console.log("[LOADER] Initializing webhooks...");
     guild.fetchWebhooks().then(ws => {
       settings.get("webhooks").then((obj) => {
         for (let w in obj) {
