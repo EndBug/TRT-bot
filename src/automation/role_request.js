@@ -53,7 +53,10 @@ function findGame(emoji) {
 
 function updateMessage(id) {
   for (let game of games) game.updatePeople();
-  channel.fetchMessage(id).then(msg => msg.edit(createMessage()));
+  channel.fetchMessage(id).then(msg => {
+    if (msg != undefined) msg.edit(createMessage());
+    else channel.send("Rebuilding...").then(nmsg => nmsg.edit(createMessage()));
+  });
 }
 
 module.exports.run = () => {
@@ -76,10 +79,13 @@ module.exports.run = () => {
 
     settings.get("messages").then(obj => {
       let id = obj.games;
-      channel.send("Rebuilding...").then(message => {
-        if (id == undefined) id = message.id;
-        else message.delete();
-
+      new Promise((resolve) => {
+        if (id == undefined) channel.send("Rebuilding...").then(msg => {
+          id = msg.id;
+          resolve();
+        });
+        else resolve();
+      }).then(() => {
         if (id != obj.games) settings.set("messages", {
           games: id
         });
