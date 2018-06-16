@@ -20,7 +20,7 @@ global.ActivityTypes = {
   STREAMING: "STREMING",
   WATCHING: "WATCHING"
 };
-jest.setTimeout(10000);
+jest.setTimeout(15000);
 
 const token = `${process.env.TEST_TOKEN}`;
 
