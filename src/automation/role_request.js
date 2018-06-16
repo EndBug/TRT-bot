@@ -80,7 +80,7 @@ module.exports.run = () => {
     settings.get("messages").then(obj => {
       let id = obj.games;
       new Promise((resolve) => {
-        if (id == undefined) channel.send("Rebuilding...").then(msg => {
+        if (id == undefined) channel.send(say("game-build")).then(msg => {
           id = msg.id;
           resolve();
         });
