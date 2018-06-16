@@ -1,4 +1,4 @@
-/*global tree*/
+/*global settings tree*/
 const Discord = require("discord.js");
 const fs = require("fs");
 const GoogleSpreadsheet = require("google-spreadsheet");
@@ -31,15 +31,17 @@ goGlobal({
   twitter_api_secret,
   goGlobal
 });
-require("./tree.js");
+loadMod("./tree.js");
 
 const config = require(tree["config.json"]);
+console.log(`[LOADER] Loaded config file`);
 const client = new Discord.Client();
 var guild, owner;
 
 var say = require(tree[config.lang + ".js"]);
 //hard-coded message
 if (say("test") != "ok") throw new Error(`Language module ${config.lang} not working properly: test command returned \`"${say("test")}"\` instead of \`"ok"\``);
+else console.log(`[LOADER] Using ${say("language")} language`);
 
 client.login(token);
 
@@ -53,141 +55,95 @@ const modules = [
 ];
 
 
-var channels = {
-  admin: {
-    name: "admins",
-    id: "300606293721219072"
-  },
-  bot: {
-    name: "botchat",
-    id: "300600162235973632"
-  },
-  general: {
-    name: "chat",
-    id: "266553379201875968"
-  },
-  nomic: {
-    name: "muted-mic-texts",
-    id: "377793122836414464"
-  },
-  rules: {
-    name: "rules",
-    id: "300598727935262720"
-  },
-  staff: {
-    name: "staff",
-    id: "366301801722544128"
-  },
-  twitter: {
-    name: "tweets",
-    id: "440216656959111168"
-  }
-};
-
-var roles = {
-  user: {
-    name: "Players",
-    id: "300593365773189120"
-  },
-  staff: {
-    name: "Staff",
-    id: "366294150880034837"
-  },
-  admin: {
-    name: "Admins",
-    id: "300592362005069825"
-  },
-  developer: {
-    name: "Developers",
-    id: "385532005640699915"
-  }
-};
-
-var webhooks = {
-  twitter: {
-    name: "Twitter webhook",
-    id: "440162684714090496"
-  }
-};
+var channels = {},
+  roles = {},
+  webhooks = {};
 
 function error(file, f, message, callback = () => {}) {
   owner.send(`**ERROR:**\n\`${file}\` > \`${f}\`\n*${message}*`).then((m) => callback(m));
 }
+goGlobal({
+  error
+});
 
 function initChannels() {
-  for (let c in channels) {
-    let curr = channels[c];
-    let channel = guild.channels.find("name", curr.name);
-    if (channel == undefined) {
-      error("app.js", "initChannels", `Channel with name "${curr.name}" returns \`undefined\`, trying to use backup id.`);
-      channel = guild.channels.get(curr.id);
+  return settings.get("channels").then((obj) => {
+    for (let c in obj) {
+      let id = obj[c];
+      let channel = guild.channels.get(id);
       if (channel == undefined) {
-        error("app.js", "initChannels", `Using fallback id "${curr.id}" returns \`undefined\`, stopping bot...`, () => {
-          throw new Error(`Using fallback id "${curr.id}" returns \`undefined\`, stopping bot...`);
+        let err = `Using id "${id}" returns \`undefined\`, stopping bot...`;
+        error("app.js", "initChannels", err, () => {
+          throw new Error(err);
         });
       }
+      channels[c] = channel;
     }
-    channels[c] = channel;
-  }
+  }).catch((err) => {
+    throw new Error(err);
+  });
 }
 
 function initRoles() {
-  for (let r in roles) {
-    let curr = roles[r];
-    let role = guild.roles.find("name", curr.name);
-    if (role == undefined) {
-      error("app.js", "initRoles", `Role with name "${curr.name}" returns \`undefined\`, trying to use backup id.`);
-      role = guild.roles.get(curr.id);
+  return settings.get("roles").then((obj) => {
+    for (let r in obj) {
+      let id = obj[r];
+      let role = guild.roles.get(id);
       if (role == undefined) {
-        error("app.js", "initRoles", `Using fallback id "${curr.id}" returns \`undefined\`, stopping bot...`, () => {
-          throw new Error(`Using fallback id "${curr.id}" returns \`undefined\`, stopping bot...`);
+        let err = `Using id "${id}" returns \`undefined\`, stopping bot...`;
+        error("app.js", "initRoles", err, () => {
+          throw new Error(err);
         });
       }
+      roles[r] = role;
     }
-    roles[r] = role;
-  }
+  }).catch((err) => {
+    throw new Error(err);
+  });
 }
 
 function initWebhooks() {
   return new Promise((resolve, reject) => {
     guild.fetchWebhooks().then(ws => {
-      for (let w in webhooks) {
-        let curr = webhooks[w];
-        let webhook;
-        webhook = ws.find("name", curr.name);
-        if (webhook == undefined) {
-          error("app.js", "initWebhooks", `Webhook with name "${curr.name}" returns \`undefined\`, trying to use backup id.`);
-          webhook = ws.get(curr.id);
+      settings.get("webhooks").then((obj) => {
+        for (let w in obj) {
+          let id = obj[w];
+          let webhook = ws.get(id);
           if (webhook == undefined) {
-            reject(`Using fallback id "${curr.id}" returns \`undefined\`, stopping bot...`);
+            reject(`Using id "${id}" returns \`undefined\`, stopping bot...`);
           }
+          webhooks[w] = webhook;
         }
-        webhooks[w] = webhook;
-      }
-      resolve();
+        resolve();
+      }).catch((err) => reject(err));
     });
   });
+}
+
+function loadMod(mod) {
+  mod = require(mod);
+  console.log(`[LOADER] Loaded ${mod.name}`);
+  return mod;
 }
 
 function runModules(exept = []) {
   if (typeof exept != Object) exept = [exept];
   for (let mod of modules) {
-    let l_mod = require(mod);
-    console.log(`[LOADER] Loaded ${l_mod.name}`);
+    let l_mod = loadMod(mod);
     if (!exept.includes(mod) && !exept.includes(l_mod.name)) l_mod.run();
   }
 }
 
 function loadSettings() {
-  let mod = require(tree["settings.js"]);
+  let mod = loadMod(tree["settings.js"]);
   goGlobal({
     settings: mod
   });
-  mod.run();
+  return mod.run();
 }
 
 function loadUtils() {
-  let mod = require(tree["utils.js"]);
+  let mod = loadMod(tree["utils.js"]);
   goGlobal(mod.utils);
 }
 
@@ -279,44 +235,45 @@ client.on("ready", () => {
   owner = guild.members.get(config.ids.owner);
   guild.members.get(client.user.id).setNickname("");
 
-  loadSettings();
+  loadSettings().then(() => {
+    initChannels().then(() => {
+      initRoles().then(() => {
+        initWebhooks().then(() => {
+          let to_global = Object.assign(
+            ranks,
+            PresenceStatuses,
+            ActivityTypes, {
+              ActivityTypes,
+              channels,
+              client,
+              colors,
+              Command,
+              commands,
+              config,
+              guild,
+              owner,
+              PresenceStatuses,
+              ranks,
+              roles,
+              say,
+              webhooks
+            }
+          );
+          goGlobal(to_global);
 
-  initChannels();
-  initRoles();
-  initWebhooks().then(() => {
-    let to_global = Object.assign(
-      ranks,
-      PresenceStatuses,
-      ActivityTypes, {
-        ActivityTypes,
-        channels,
-        client,
-        colors,
-        Command,
-        commands,
-        config,
-        error,
-        guild,
-        owner,
-        PresenceStatuses,
-        ranks,
-        roles,
-        say,
-        webhooks
-      }
-    );
-    goGlobal(to_global);
+          loadUtils();
 
-    loadUtils();
+          runModules();
 
-    runModules();
-
-    owner.send(say("running")).then(m => m.delete(60000));
-  }).catch((e, t = false) => {
-    let f = () => {};
-    if (t) f = () => {
-      throw new Error(e);
-    };
-    error("app.js", "initWebhooks", e, f);
+          owner.send(say("running")).then(m => m.delete(60000));
+        }).catch((e, t = false) => {
+          let f = () => {};
+          if (t) f = () => {
+            throw new Error(e);
+          };
+          error("app.js", "initWebhooks", e, f);
+        });
+      });
+    });
   });
 });

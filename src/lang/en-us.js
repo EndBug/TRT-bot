@@ -40,6 +40,7 @@ module.exports = (name, v1, v2, v3) => {
     "test-help": "Custom test command",
     "welcome": `Welcome ${v1}! Look at the ${v2} channel to see how this server works ;)\nRemember that bot commands only work in ${v3}!`,
 
+    "language": "American English",
     "test": `ok`
   };
 
