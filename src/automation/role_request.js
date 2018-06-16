@@ -1,4 +1,4 @@
-/*global channels client error guild mention say settings userToMember*/
+/*global channels chars client colors Discord error guild owner say settings userToMember*/
 module.exports.name = "Role request";
 
 class Game {
@@ -30,11 +30,21 @@ var games = [];
 var channel = channels.games;
 
 function createMessage() {
-  let res = say("game-msg");
-  for (let game of games) {
-    res += `\n${game.emoji} → ${game.name} - ${game.people} user${game.people > 1 ? "s" : ""}`;
+  let embed = new Discord.RichEmbed()
+    .setColor(colors.ORANGE)
+    .setTimestamp()
+    .setFooter("Made by EndBug", owner.user.displayAvatarURL)
+    .setAuthor(say("game-author"), "https://imgur.com/omgbGo1.png");
+  let value1 = "",
+    value2 = "";
+  for (let i = 0; i < games.length; i++) {
+    let game = games[i],
+      str = `\n${game.emoji} → ${game.name} - ${game.people} user${game.people > 1 ? "s" : ""}`;
+    if (i < games.length / 2) value1 += str;
+    else value2 += str;
   }
-  return res;
+  embed.addField(say("game-msg"), value1, true).addField(say("game-no", games.length), value2, true);
+  return embed;
 }
 
 function sortGames() {
@@ -106,16 +116,20 @@ module.exports.run = () => {
           if (reaction.message.id != id || user == client.user) return;
           let game = findGame(reaction.emoji),
             member = userToMember(user),
-            message = "";
+            embed = new Discord.RichEmbed()
+            .setTimestamp()
+            .setAuthor(user.username, user.displayAvatarURL);
           if (game != undefined) {
             if (member.hasRole(game.role)) {
               member.removeRole(game.role).then(() => updateMessage(id));
-              message = `\`\`\`diff\n- ${game.name}\n\`\`\``;
+              embed.addField(say("game-rem"), `- ${game.name}`);
+              embed.setColor(colors.RED);
             } else {
               member.addRole(game.role).then(() => updateMessage(id));
-              message = `\`\`\`diff\n+ ${game.name}\n\`\`\``;
+              embed.addField(say("game-add"), `+ ${game.name}`);
+              embed.setColor(colors.GREEN);
             }
-            channel.send(`${mention(user)}\n${message}`);
+            channel.send(embed);
           }
           reaction.remove(user);
         });
