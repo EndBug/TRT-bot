@@ -1,4 +1,4 @@
-/*global channels chars client colors Discord error guild owner say settings userToMember*/
+/*global channels client colors Discord error guild owner say settings userToMember*/
 module.exports.name = "Role request";
 
 class Game {
