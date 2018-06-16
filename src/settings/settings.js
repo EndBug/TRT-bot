@@ -37,8 +37,9 @@ module.exports.run = () => {
 module.exports.get = (name, rows = 100, empty = false) => {
   return new Promise((resolve, reject) => {
     if (!Object.keys(worksheets).includes(name)) {
-      error("settings.js", "get", `Name is not included: ${name}`);
-      reject();
+      let err = `Name is not included: ${name}`;
+      error("settings.js", "get", err);
+      reject(err);
     } else {
       let sheet = worksheets[name];
       sheet.getCells({
