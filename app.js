@@ -173,10 +173,15 @@ var ranks = {
 };
 
 var colors = {
-  RED: 0xff1900,
+  GREEN: 0x19eb00,
   ORANGE: 0xFF8300,
-  YELLOW: 0xebeb00,
-  GREEN: 0x19eb00
+  PURPLE: 0x6500FF,
+  RED: 0xff1900,
+  YELLOW: 0xebeb00
+};
+
+var chars = {
+  BLANK: "­"
 };
 
 var PresenceStatuses = {
@@ -246,6 +251,7 @@ client.on("ready", () => {
             ActivityTypes, {
               ActivityTypes,
               channels,
+              chars,
               client,
               colors,
               Command,
