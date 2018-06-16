@@ -121,7 +121,7 @@ module.exports.run = () => {
         });
 
         client.on("message", message => {
-          message.delete(5000);
+          if (message.channel == channel) message.delete(5000);
         });
       });
     });
