@@ -50,6 +50,7 @@ const modules = [
   tree["commands.js"],
   tree["new_member.js"],
   tree["reactions.js"],
+  tree["role_request.js"],
   tree["status_rotation.js"],
   tree["twitter.js"]
 ];
