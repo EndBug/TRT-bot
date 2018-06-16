@@ -31,15 +31,17 @@ goGlobal({
   twitter_api_secret,
   goGlobal
 });
-require("./tree.js");
+loadMod("./tree.js");
 
 const config = require(tree["config.json"]);
+console.log(`[LOADER] Loaded config file`);
 const client = new Discord.Client();
 var guild, owner;
 
 var say = require(tree[config.lang + ".js"]);
 //hard-coded message
 if (say("test") != "ok") throw new Error(`Language module ${config.lang} not working properly: test command returned \`"${say("test")}"\` instead of \`"ok"\``);
+else console.log(`[LOADER] Using ${say("language")} language`);
 
 client.login(token);
 
@@ -118,17 +120,22 @@ function initWebhooks() {
   });
 }
 
+function loadMod(mod) {
+  mod = require(mod);
+  console.log(`[LOADER] Loaded ${mod.name}`);
+  return mod;
+}
+
 function runModules(exept = []) {
   if (typeof exept != Object) exept = [exept];
   for (let mod of modules) {
-    let l_mod = require(mod);
-    console.log(`[LOADER] Loaded ${l_mod.name}`);
+    let l_mod = loadMod(mod);
     if (!exept.includes(mod) && !exept.includes(l_mod.name)) l_mod.run();
   }
 }
 
 function loadSettings() {
-  let mod = require(tree["settings.js"]);
+  let mod = loadMod(tree["settings.js"]);
   goGlobal({
     settings: mod
   });
@@ -136,7 +143,7 @@ function loadSettings() {
 }
 
 function loadUtils() {
-  let mod = require(tree["utils.js"]);
+  let mod = loadMod(tree["utils.js"]);
   goGlobal(mod.utils);
 }
 
