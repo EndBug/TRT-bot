@@ -14,6 +14,7 @@ module.exports = (name, v1, v2, v3) => {
     "err-lack-of-perms": `[ERR] You don't have the permissions to perform this command (${v1} - ${v2}).`,
     "err-undef-arg": `[ERR] Argument(s) number \`${v1}\` are undefined.`,
     "eval-help": "Runs code from messages.",
+    "game-msg": "React with the emojis to get the role:",
     "help-author": `TRT Bot Command help - ${v1}`,
     "help-comingsoon": "Coming soon...",
     "help-help": "Shows this page.",

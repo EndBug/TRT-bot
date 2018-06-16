@@ -1,4 +1,4 @@
-/*global absolutePath client config Discord error fs ranks roles say tree*/
+/*global absolutePath client config Discord error fs guild ranks roles say tree*/
 
 module.exports.name = "Utils";
 module.exports.utils = {
@@ -48,6 +48,7 @@ module.exports.utils = {
     if (element instanceof Discord.GuildMember) element = element.user;
     if (element instanceof Discord.User) return `<@${element.id}>`;
     else if (element instanceof Discord.Channel) return `<#${element.id}>`;
+    else if (element instanceof Discord.Role) return `<&${element.id}>`;
     else return "<@invalid_user>";
   },
   mentionToID: (str) => {
@@ -71,6 +72,9 @@ module.exports.utils = {
   },
   updateConfig: () => {
     module.exports.utils.writeJSON(absolutePath(tree["config.json"]), config);
+  },
+  userToMember: (user) => {
+    if (user instanceof Discord.User) return guild.members.get(user.id);
   },
   writeJSON: (path = "", obj) => {
     if (fs.existsSync(path) && typeof obj == "object") fs.writeFile(path, JSON.stringify(obj), (e) => {
