@@ -50,6 +50,7 @@ const modules = [
   tree["commands.js"],
   tree["new_member.js"],
   tree["reactions.js"],
+  tree["role_request.js"],
   tree["status_rotation.js"],
   tree["twitter.js"]
 ];
@@ -161,10 +162,7 @@ class Command {
 }
 
 Discord.GuildMember.prototype.hasRole = function(role) {
-  if (role instanceof Discord.Role)
-    for (let r of this.roles.array())
-      if (r == role) return true;
-  return false;
+  return (role instanceof Discord.Role && this.roles.array().includes(role));
 };
 
 var ranks = {
@@ -175,10 +173,15 @@ var ranks = {
 };
 
 var colors = {
-  RED: 0xff1900,
+  GREEN: 0x19eb00,
   ORANGE: 0xFF8300,
-  YELLOW: 0xebeb00,
-  GREEN: 0x19eb00
+  PURPLE: 0x6500FF,
+  RED: 0xff1900,
+  YELLOW: 0xebeb00
+};
+
+var chars = {
+  BLANK: "­"
 };
 
 var PresenceStatuses = {
@@ -248,6 +251,7 @@ client.on("ready", () => {
             ActivityTypes, {
               ActivityTypes,
               channels,
+              chars,
               client,
               colors,
               Command,

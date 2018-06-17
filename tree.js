@@ -10,6 +10,7 @@ const tree = {
   "new_member.js": "./src/automation/new_member.js",
   "reactions.js": "./src/automation/reactions.js",
   "reloadme.json": "./src/misc/reloadme.json",
+  "role_request.js": "./src/automation/role_request.js",
   "settings.js": "./src/settings/settings.js",
   "status_rotation.js": "./src/automation/status_rotation.js",
   "twitter.js": "./src/webhooks/twitter.js",

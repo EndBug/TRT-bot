@@ -154,7 +154,7 @@ test("clean", async () => {
 });
 
 test("reactions", async () => {
-  reactions.run();
+  reactions.run(false);
   let res;
   let p = new Promise((resolve, reject) => {
     client.on("messageReactionRemove", (reaction) => {
