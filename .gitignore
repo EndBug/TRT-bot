@@ -3,3 +3,4 @@ node_modules
 *.ini
 .eslintrc.json
 reloadme.json
+*.old
