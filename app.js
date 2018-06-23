@@ -233,54 +233,54 @@ var commands = {
 
 
 
-client.on("error", (e) => console.error(e));
-client.on("warn", (w) => console.warn(w));
-client.on("debug", (d) => console.info(d));
-client.on("ready", () => {
-  guild = client.guilds.array()[0];
-  owner = guild.members.get(config.ids.owner);
-  guild.members.get(client.user.id).setNickname("");
+client.on("error", (e) => console.error(e))
+  .on("warn", (w) => console.warn(w))
+  .on("debug", (d) => console.info(d))
+  .on("ready", () => {
+    guild = client.guilds.array()[0];
+    owner = guild.members.get(config.ids.owner);
+    guild.members.get(client.user.id).setNickname("");
 
-  loadSettings().then(() => {
-    initChannels().then(() => {
-      initRoles().then(() => {
-        initWebhooks().then(() => {
-          let to_global = Object.assign(
-            ranks,
-            PresenceStatuses,
-            ActivityTypes, {
-              ActivityTypes,
-              channels,
-              chars,
-              client,
-              colors,
-              Command,
-              commands,
-              config,
-              guild,
-              owner,
-              PresenceStatuses,
+    loadSettings().then(() => {
+      initChannels().then(() => {
+        initRoles().then(() => {
+          initWebhooks().then(() => {
+            let to_global = Object.assign(
               ranks,
-              roles,
-              say,
-              webhooks
-            }
-          );
-          goGlobal(to_global);
+              PresenceStatuses,
+              ActivityTypes, {
+                ActivityTypes,
+                channels,
+                chars,
+                client,
+                colors,
+                Command,
+                commands,
+                config,
+                guild,
+                owner,
+                PresenceStatuses,
+                ranks,
+                roles,
+                say,
+                webhooks
+              }
+            );
+            goGlobal(to_global);
 
-          loadUtils();
+            loadUtils();
 
-          runModules();
+            runModules();
 
-          owner.send(say("running")).then(m => m.delete(60000));
-        }).catch((e, t = false) => {
-          let f = () => {};
-          if (t) f = () => {
-            throw new Error(e);
-          };
-          error("app.js", "initWebhooks", e, f);
+            owner.send(say("running")).then(m => m.delete(60000));
+          }).catch((e, t = false) => {
+            let f = () => {};
+            if (t) f = () => {
+              throw new Error(e);
+            };
+            error("app.js", "initWebhooks", e, f);
+          });
         });
       });
     });
   });
-});
