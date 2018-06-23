@@ -27,7 +27,7 @@ module.exports = (name, v1, v2, v3) => {
     "help-onepage": "There's only one help page.",
     "help-success": ":white_check_mark: I've just sent you a Direct Message :wink:",
     "info-help": "Sends infos about the bot itself.",
-    "info-msg": `TRT Bot has been built by ${v1} for the TRT server. It's made in Node.js, usign the Discord.js library. At the moment I'm running it on Heroku, that auto-deploys the bot every time a change on the master is pushed. If you want to start developing bots, check this servers:\n${links.discordAPI}\n${links.discordjs}\nIf you want to check out this bot, go to ${links.githubRepo} (disclaimer: not a good coder, might not want to read that)`,
+    "info-msg": `TRT Bot has been built by ${v1} for the TRT server. It's made in Node.js, usign the Discord.js library and its extension Commando. At the moment I'm running it on Heroku, that auto-deploys the bot every time a change on the master is pushed. If you want to start developing bots, check this servers:\n${links.discordAPI}\n${links.discordjs}\nIf you want to check out this bot, go to ${links.githubRepo} (disclaimer: not a good coder, might not want to read that)`,
     "invite-help": "Replies with the invite for this server.",
     "invite-msg": "Share this link! ;)\nhttps://discord.gg/TJc4r9X",
     "maintenance-off": "Bot set in public mode.",
