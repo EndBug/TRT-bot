@@ -1,4 +1,4 @@
-/*global channels config error Twit twitterAccountsToQuery twitter_api_key twitter_api_secret webhooks*/
+/*global channels error Twit twitterAccountsToQuery twitter_api_key twitter_api_secret webhooks*/
 module.exports.name = "Twitter webhook";
 
 module.exports.run = (force = 0) => {
@@ -9,7 +9,16 @@ module.exports.run = (force = 0) => {
     app_only_auth: true,
     timeout_ms: 60 * 1000
   });
-  var settings = config.webhooks.twitter;
+  var settings = {
+    options: "-filter:replies -filter:nativeretweets",
+    refreshMin: 1,
+    targets: [
+      "discordapp",
+      "FortniteGame",
+      "PlayOverwatch",
+      "PlayWarframe"
+    ]
+  };
 
   var hook = webhooks.twitter;
 
