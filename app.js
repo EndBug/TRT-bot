@@ -233,9 +233,9 @@ var commands = {
 
 
 
-client.on("error", (e) => console.error(e))
-  .on("warn", (w) => console.warn(w))
-  .on("debug", (d) => console.info(d))
+client.on("error", console.error)
+  .on("warn", console.warn)
+  .on("debug", console.info)
   .on("ready", () => {
     guild = client.guilds.array()[0];
     owner = guild.members.get(config.ids.owner);
