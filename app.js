@@ -121,6 +121,12 @@ function initWebhooks() {
         resolve();
       }).catch((err) => reject(err));
     });
+  }).catch((e, t = false) => {
+    let f = () => {};
+    if (t) f = () => {
+      throw new Error(e);
+    };
+    error("app.js", "initWebhooks", e, f);
   });
 }
 
@@ -273,10 +279,4 @@ client.on("error", console.error)
     runModules();
 
     owner.send(say("running")).then(m => m.delete(5000));
-  }).catch((e, t = false) => {
-    let f = () => {};
-    if (t) f = () => {
-      throw new Error(e);
-    };
-    error("app.js", "initWebhooks", e, f);
   });
