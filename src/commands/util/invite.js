@@ -5,7 +5,7 @@ module.exports = class InviteCMD extends Commando.Command {
     super(client, {
       name: "invite",
       aliases: ["get-invite", "send-invite", "inv"],
-      group: "misc",
+      group: "util",
       memberName: "invite",
       description: say("invite-help"),
       details: say("invite-note")

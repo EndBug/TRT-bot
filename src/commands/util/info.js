@@ -5,7 +5,7 @@ module.exports = class InfoCMD extends Commando.Command {
     super(client, {
       name: "info",
       aliases: ["bot-info", "get-info"],
-      group: "misc",
+      group: "util",
       memberName: "info",
       description: say("info-help")
     });
