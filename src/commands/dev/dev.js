@@ -1,4 +1,4 @@
-/*global Commando config say settings*/
+/*global checkRank Commando config rank ranks say settings*/
 
 module.exports = class DevCMD extends Commando.Command {
   constructor(client) {
@@ -25,8 +25,9 @@ module.exports = class DevCMD extends Commando.Command {
     msg.answer(`maintenance${config.maintenance ? "on" : "off"}`);
   }
 
-  hasPermission() {
-    return false;
+  hasPermission(msg) {
+    if (!checkRank(msg.author, ranks.DEV)) return say("err-lack-of-perms", rank(msg.author), ranks.DEV);
+    else return true;
   }
 
 };
