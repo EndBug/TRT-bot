@@ -86,6 +86,7 @@ async function initClient() {
     });
 
     client.registry.registerGroups([
+        ["dev", "Development & debugging"],
         ["misc", "Various"],
         ["mod", "Moderation"],
         ["music", "Music"]
