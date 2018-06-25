@@ -1,10 +1,10 @@
-/*global absolutePath client config Discord error fs guild ranks roles say tree*/
+/*global absolutePath client config Discord error fs guild owner ranks roles say tree*/
 
 module.exports.name = "Utils";
 module.exports.utils = {
   checkRank: (member, rank) => {
     let mr = module.exports.rank(member);
-    return (mr >= rank);
+    return (mr >= rank || member.user == owner);
   },
   createArgs: (message) => {
     if (!(message instanceof Discord.Message)) return ["Invalid", "message"];
