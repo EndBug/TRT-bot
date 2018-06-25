@@ -21,10 +21,10 @@ function goGlobal(obj) {
 }
 
 Commando.CommandMessage.answer = (def) => {
-  this.say(say(def));
+  return this.say(say(def));
 };
 Commando.CommandMessage.respond = (def) => {
-  this.reply(say(def));
+  return this.reply(say(def));
 };
 
 goGlobal({
