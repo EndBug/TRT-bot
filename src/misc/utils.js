@@ -21,6 +21,7 @@ module.exports.utils = {
     else return "<@invalid_user>";
   },
   rank: (member) => {
+    if (member instanceof Discord.User) member = module.exports.utils.userToMember(member);
     if (member instanceof Discord.GuildMember) {
       if (member.hasRole(roles.developer)) return ranks.DEV;
       else if (member.hasRole(roles.admin)) return ranks.ADMIN;
