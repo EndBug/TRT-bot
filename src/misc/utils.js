@@ -2,6 +2,10 @@
 
 module.exports.name = "Utils";
 module.exports.utils = {
+  checkRank: (member, rank) => {
+    let mr = module.exports.rank(member);
+    return (mr >= rank);
+  },
   createArgs: (message) => {
     if (!(message instanceof Discord.Message)) return ["Invalid", "message"];
     let store = message.content.substring(config.p.length).split(/([ \n])+/g);
