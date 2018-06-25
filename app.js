@@ -98,13 +98,14 @@ async function initClient() {
 function setInhibitors() {
   client.dispatcher.addInhibitor(msg => {
     try {
-      if (msg.channel != channels.bot) {
+      if (msg.channel != channels.bot && !(msg.channel instanceof Discord.DMChannel)) {
         msg.delete();
         if (msg.author != owner) {
           msg.respond("ignored-cmd", mention(channels.bot)).then(m => m.delete(5000));
           return true;
         } else return false;
-      } else return false;
+      } else if (msg.channel instanceof Discord.DMChannel) return (msg.command.id != "help");
+      return false;
     } catch (e) {
       error("app.js", "inhibitor", e);
     }
