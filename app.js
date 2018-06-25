@@ -20,6 +20,10 @@ function goGlobal(obj) {
   for (let key in obj) global[key] = obj[key];
 }
 
+Commando.CommandMessage.answer = (def) => {
+  this.say(say(def));
+};
+
 goGlobal({
   branch,
   Commando,
