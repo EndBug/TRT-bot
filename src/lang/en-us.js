@@ -30,6 +30,7 @@ module.exports = (name, v1, v2, v3) => {
     "info-msg": `TRT Bot has been built by ${v1} for the TRT server. It's made in Node.js, usign the Discord.js library and its extension Commando. At the moment I'm running it on Heroku, that auto-deploys the bot every time a change on the master is pushed. If you want to start developing bots, check this servers:\n${links.discordAPI}\n${links.discordjs}\nIf you want to check out this bot, go to ${links.githubRepo} (disclaimer: not a good coder, might not want to read that)`,
     "invite-help": "Replies with the invite for this server.",
     "invite-msg": "Share this link! ;)\nhttps://discord.gg/TJc4r9X",
+    "invite-note": "Don't worry, this won't expire!",
     "maintenance-off": "Bot set in public mode.",
     "maintenance-on": "Bot set in developer mode.",
     "moderation-required": `**MODERATION REQUIRED:**\nUser: ${v1}\nChannel: ${v2}`,
