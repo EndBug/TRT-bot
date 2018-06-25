@@ -129,7 +129,7 @@ test("now", () => {
 
 test("clean", async () => {
   global.config = {
-    cleantimeMin: 120
+    clean: 120
   };
   let channel = guild.channels.find("type", "text");
   let i = 0;
