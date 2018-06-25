@@ -1,4 +1,4 @@
-/*global settings tree*/
+/*global mention settings tree*/
 const Discord = require("discord.js");
 const Commando = require("discord.js-commando");
 const fs = require("fs");
@@ -22,6 +22,9 @@ function goGlobal(obj) {
 
 Commando.CommandMessage.answer = (def) => {
   this.say(say(def));
+};
+Commando.CommandMessage.respond = (def) => {
+  this.reply(say(def));
 };
 
 goGlobal({
@@ -69,32 +72,42 @@ goGlobal({
 });
 
 async function initClient() {
-    await loadSettings();
-    await settings.get("config").then(obj => {
-      global.config = obj;
-      config.clean = eval(obj.clean);
-      config.maintenance = eval(obj.maintenance);
-      config.status = eval(obj.status);
-      client = new Commando.Client({
-        commandPrefix: config.p,
-        disableEveryone: true,
-        owner: config.owner,
-        unknownCommandResponse: false
-      });
+  await loadSettings();
+  await settings.get("config").then(obj => {
+    global.config = obj;
+    config.clean = eval(obj.clean);
+    config.maintenance = eval(obj.maintenance);
+    config.status = eval(obj.status);
+    client = new Commando.Client({
+      commandPrefix: config.p,
+      disableEveryone: true,
+      owner: config.owner,
+      unknownCommandResponse: false
+    });
 
-      client.registry.registerGroups([
+    client.registry.registerGroups([
         ["misc", "Various"],
         ["mod", "Moderation"],
         ["music", "Music"]
       ]).registerDefaultGroups()
-        .registerDefaultTypes()
-        .registerCommandsIn(tree["commands"]);
-    });
+      .registerDefaultTypes()
+      .registerCommandsIn(tree["commands"]);
+  });
 }
 
 function setInhibitors() {
   client.dispatcher.addInhibitor(msg => {
-    return (msg.channel != channels.bot);
+    try {
+      if (msg.channel != channels.bot) {
+        msg.delete();
+        if (msg.author != owner) {
+          msg.respond("ignored-cmd", mention(channels.bot)).then(m => m.delete(5000));
+          return true;
+        } else return false;
+      } else return false;
+    } catch (e) {
+      error("app.js", "inhibitor", e);
+    }
   });
 }
 
@@ -112,7 +125,6 @@ function initChannels() {
       }
       channels[c] = channel;
     }
-    setInhibitors();
   }).catch((err) => {
     throw new Error(err);
   });
@@ -258,6 +270,8 @@ client.on("error", console.error)
     goGlobal(to_global);
 
     loadUtils();
+
+    setInhibitors();
 
     runModules();
 
