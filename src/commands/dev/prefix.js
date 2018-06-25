@@ -1,3 +1,5 @@
+/*global config settings*/
+
 const {
   stripIndents,
   oneLine
@@ -63,6 +65,10 @@ module.exports = class PrefixCommand extends Command {
       else this.client.commandPrefix = prefix;
       response = prefix ? `Set the command prefix to \`${args.prefix}\`.` : 'Removed the command prefix entirely.';
     }
+
+    //Upload the new prefix
+    config.prefix = this.client.commandPrefix;
+    settings.set("config", config);
 
     await msg.reply(`${response} To run commands, use ${msg.anyUsage('command')}.`);
     return null;
