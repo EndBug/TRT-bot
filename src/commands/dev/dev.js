@@ -4,7 +4,7 @@ module.exports = class DevCMD extends Commando.Command {
   constructor(client) {
     super(client, {
       name: "dev",
-      aliases: ["maintenance", "development", "dnd"],
+      aliases: ["development", "dnd", "maintenance"],
       group: "dev",
       memberName: "dev",
       description: say("dev-help"),
