@@ -2,9 +2,9 @@
 
 module.exports.name = "Utils";
 module.exports.utils = {
-  checkRank: (member, rank) => {
+  checkRank: (member, rank, strict = false) => {
     let mr = module.exports.rank(member);
-    return (mr >= rank || member.user == owner);
+    return (mr >= rank || (member.user == owner && !strict));
   },
   createArgs: (message) => {
     if (!(message instanceof Discord.Message)) return ["Invalid", "message"];
