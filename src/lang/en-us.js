@@ -6,8 +6,8 @@ module.exports = (name, v1, v2, v3) => {
   };
 
   let messages = {
-    "bot-reloading": "Bot is reloading...",
-    "bot-reloaded": `--- Bot reloaded by ${v1} ---`,
+    "bot-restarted": `--- Bot restarted by ${v1} ---`,
+    "bot-restarting": "Bot is restarting...",
     "bot-shutdown": `---- Bot shut down by ${v1} ---`,
     "bot-shutting": "Bot shutting down...",
     "dev-help": "Sets the bot in \"Maintenance\" status.",
@@ -43,7 +43,7 @@ module.exports = (name, v1, v2, v3) => {
     "rank-dev": "Developer",
     "rank-player": "User",
     "rank-staff": "Staff",
-    "reload-help": "Reloads the bot.",
+    "restart-help": "Restarts the bot.",
     "running": "TRT Bot is running.",
     "test-help": "Custom test command",
     "welcome": `Welcome ${v1}! Look at the ${v2} channel to see how this server works ;)\nRemember that bot commands only work in ${v3}!`,
