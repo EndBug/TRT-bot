@@ -17,10 +17,12 @@ module.exports.utils = {
     return store;
   },
   getFullName: (user) => {
+    if (user instanceof Discord.GuildMember) user = user.user;
     if (user instanceof Discord.User) return `${user.username}#${user.discriminator} (${user.id})`;
     else return "<@invalid_user>";
   },
   getShortName: (user) => {
+    if (user instanceof Discord.GuildMember) user = user.user;
     if (user instanceof Discord.User) return `${user.username}#${user.discriminator}`;
     else return "<@invalid_user>";
   },
