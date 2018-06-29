@@ -1,11 +1,15 @@
+/*global Command*/
+
 const {
   stripIndents,
   oneLine
 } = require('common-tags');
-const Command = require('../base');
 const {
   disambiguation
-} = require('../../util');
+} = (items, label, property = 'name') => {
+  const itemList = items.map(item => `"${(property ? item[property] : item).replace(/ /g, '\xa0')}"`).join(',   ');
+  return `Multiple ${label} found, please be more specific: ${itemList}`;
+};
 
 module.exports = class HelpCommand extends Command {
   constructor(client) {

@@ -1,8 +1,9 @@
+/*global Command*/
+
 const util = require('util');
 const discord = require('discord.js');
 const tags = require('common-tags');
 const escapeRegex = require('escape-string-regexp');
-const Command = require('../base');
 
 const nl = '!!NL!!';
 const nlPattern = new RegExp(nl, 'g');

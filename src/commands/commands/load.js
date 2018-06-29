@@ -1,8 +1,9 @@
+/*global Command*/
+
 const fs = require('fs');
 const {
   oneLine
 } = require('common-tags');
-const Command = require('../base');
 
 module.exports = class LoadCommandCommand extends Command {
   constructor(client) {
