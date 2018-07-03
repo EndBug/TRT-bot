@@ -11,7 +11,7 @@
     "node-fetch": "^2.1.2",
     "nodemon": "^1.17.3",
     "npm": "^6.1.0",
-    "twit": "^2.2.10"
+    "twit": "^2.2.11"
   },
   "devDependencies": {
     "jest": "^23.2.0"
