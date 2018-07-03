@@ -1,7 +1,8 @@
+/*global Command*/
+
 const {
   oneLine
 } = require('common-tags');
-const Command = require('../base');
 
 module.exports = class ReloadCommandCommand extends Command {
   constructor(client) {
