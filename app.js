@@ -1,6 +1,7 @@
-/*global mention settings tree*/
+/*global absolutePath config mention say settings tree*/
 const Discord = require("discord.js");
 const Commando = require("discord.js-commando");
+global.Command = Commando.Command;
 const fs = require("fs");
 const GoogleSpreadsheet = require("google-spreadsheet");
 const Twit = require("twit");
@@ -43,14 +44,8 @@ goGlobal({
 });
 loadMod("./tree.js");
 
-const config = require(tree["config.json"]);
-console.log(`[LOADER] Loaded config file`);
 var client, guild, owner;
 
-var say = require(tree[config.lang + ".js"]);
-//hard-coded message
-if (say("test") != "ok") throw new Error(`Language module ${config.lang} not working properly: test command returned \`"${say("test")}"\` instead of \`"ok"\``);
-else console.log(`[LOADER] Using ${say("language")} language`);
 
 const modules = [
   tree["channel_cleaning.js"],
@@ -77,14 +72,22 @@ async function initClient() {
   await settings.get("config").then(obj => {
     global.config = obj;
     config.clean = eval(obj.clean);
-    config.maintenance = eval(obj.maintenance);
+    config.maintenance = eval(obj.maintenance.toLowerCase());
     config.status = eval(obj.status);
+    global.say = require(tree[config.lang + ".js"]);
+    //hard-coded message
+    if (say("test") != "ok") throw new Error(`Language module ${config.lang} not working properly: test command returned \`"${say("test")}"\` instead of \`"ok"\``);
+    else console.log(`[LOADER] Using ${say("language")} language`);
     client = new Commando.Client({
       commandPrefix: config.p,
       disableEveryone: true,
       owner: config.owner,
       unknownCommandResponse: false
     });
+
+    client.on("error", console.error)
+      .on("warn", console.warn)
+      .on("debug", console.log);
 
     client.registry.registerGroups([
         ["dev", "Development & debugging"],
@@ -93,7 +96,7 @@ async function initClient() {
         ["music", "Music"]
       ]).registerDefaultGroups()
       .registerDefaultTypes()
-      .registerCommandsIn(tree["commands"]);
+      .registerCommandsIn(absolutePath(tree["commands"]));
   });
 }
 
@@ -237,14 +240,11 @@ var ActivityTypes = {
   WATCHING: "WATCHING"
 };
 
-initClient();
-
-client.on("error", console.error)
-  .on("warn", console.warn)
-  .on("debug", console.info)
-  .on("ready", async () => {
+(async () => {
+  await initClient();
+  client.on("ready", async () => {
     guild = client.guilds.array()[0];
-    owner = guild.members.get(config.ids.owner);
+    owner = guild.members.get(config.owner);
     guild.members.get(client.user.id).setNickname("");
 
     await loadSettings();
@@ -266,7 +266,6 @@ client.on("error", console.error)
         PresenceStatuses,
         ranks,
         roles,
-        say,
         webhooks
       }
     );
@@ -280,5 +279,5 @@ client.on("error", console.error)
 
     owner.send(say("running")).then(m => m.delete(5000));
   });
-
-client.login(token);
+  client.login(token);
+})();

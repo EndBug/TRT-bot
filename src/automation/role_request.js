@@ -20,7 +20,7 @@ class Game {
   updatePeople() {
     let count = 0;
     guild.members.forEach((member) => {
-      if (member.roles.has(this.role)) count++;
+      if (member.roles.has(this.role.id)) count++;
     });
     this.people = count;
   }
