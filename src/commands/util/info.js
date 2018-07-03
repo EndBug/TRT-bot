@@ -1,4 +1,4 @@
-/*global Commando say*/
+/*global answer Commando say*/
 
 module.exports = class InfoCMD extends Commando.Command {
   constructor(client) {
@@ -12,7 +12,7 @@ module.exports = class InfoCMD extends Commando.Command {
   }
 
   run(msg) {
-    msg.answer("info-msg");
+    answer(msg, "info-msg");
   }
 
 };

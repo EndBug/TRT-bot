@@ -5,13 +5,13 @@ module.exports = class TestCMD extends Commando.Command {
     super(client, {
       name: "test",
       group: "dev",
-      memberName: "test",
+      memberName: "testcmd",
       description: say("test-help")
     });
   }
 
   async run(msg) {
-    msg.answer(`Debug test: \nRank: ${rank(msg.member)} \nHasDev: ${checkRank(msg.member, ranks.DEV, true)}`);
+    msg.say(`Debug test: \nRank: ${rank(msg.member)} \nHasDev: ${checkRank(msg.member, ranks.DEV, true)}`);
   }
 
   hasPermission(msg) {

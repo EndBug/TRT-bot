@@ -20,11 +20,12 @@ function goGlobal(obj) {
   for (let key in obj) global[key] = obj[key];
 }
 
-Commando.CommandMessage.answer = (def) => {
-  return this.say(say(def));
-};
-Commando.CommandMessage.respond = (def) => {
-  return this.reply(say(def));
+global.answer = (msg, def, mention = false) => {
+  if (msg instanceof Commando.CommandMessage) {
+    let text = say(def);
+    if (mention) return msg.reply(text);
+    else return msg.say(text);
+  } else error("app.js", "answer", "msg is not a CommandMessage");
 };
 
 goGlobal({

@@ -1,4 +1,4 @@
-/*global Commando say*/
+/*global answer Commando say*/
 
 module.exports = class InviteCMD extends Commando.Command {
   constructor(client) {
@@ -13,6 +13,6 @@ module.exports = class InviteCMD extends Commando.Command {
   }
 
   run(msg) {
-    msg.answer("invite-msg");
+    answer(msg, "invite-msg");
   }
 };

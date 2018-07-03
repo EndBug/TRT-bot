@@ -1,4 +1,4 @@
-/*global absolutePath checkRank Commando getFullName now rank ranks say tree writeJSON*/
+/*global absolutePath answer checkRank Commando getFullName now rank ranks say tree writeJSON*/
 
 module.exports = class RestartCMD extends Commando.Command {
   constructor(client) {
@@ -13,7 +13,7 @@ module.exports = class RestartCMD extends Commando.Command {
 
   async run(msg) {
     console.log(say("bot-restarted", getFullName(msg.author)));
-    await msg.answer("bot-restarting");
+    await answer(msg, "bot-restarting");
     writeJSON(absolutePath(tree["reloadme.json"]), {
       date: now()
     });

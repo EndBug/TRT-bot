@@ -1,4 +1,4 @@
-/*global checkRank Commando getFullName off rank ranks say*/
+/*global answer checkRank Commando getFullName off rank ranks say*/
 
 module.exports = class OffCMD extends Commando.Command {
   constructor(client) {
@@ -13,7 +13,7 @@ module.exports = class OffCMD extends Commando.Command {
 
   async run(msg) {
     console.log(say("bot-shutdown", getFullName(msg.author)));
-    await msg.answer("bot-shutting");
+    await answer(msg, "bot-shutting");
     off();
   }
 
