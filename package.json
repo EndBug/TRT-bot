@@ -14,7 +14,7 @@
     "twit": "^2.2.10"
   },
   "devDependencies": {
-    "jest": "^22.4.3"
+    "jest": "^23.2.0"
   },
   "scripts": {
     "start": "nodemon --watch misc/reloadme.json app.js",
