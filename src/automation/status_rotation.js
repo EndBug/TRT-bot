@@ -46,5 +46,5 @@ module.exports.run = () => {
 
   if (branch != "master") guild.members.get(client.user.id).setNickname(`TRT Bot β [${branch}]`, `Beta branch detected in code: ${branch}`);
 
-  setTimeout(module.exports.run, config.statusSec * 1000);
+  setTimeout(module.exports.run, config.status * 1000);
 };

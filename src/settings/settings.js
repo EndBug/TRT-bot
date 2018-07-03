@@ -91,7 +91,9 @@ module.exports.set = (name, obj) => {
           if (k.err || v.err) error("settings.js", "set", `Invalid cells found:\n${k}\n${v}`);
           else {
             k.value = key;
-            v.value = obj[key];
+            let future = obj[key];
+            if (typeof future == Boolean) future = `${future.toString()} `;
+            v.value = future;
             k.save();
             v.save();
             index++;

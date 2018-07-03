@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "discord.js": "^11.3.2",
+    "discord.js-commando": "^0.10.0",
     "git-branch": "^2.0.1",
     "google-spreadsheet": "^2.0.4",
     "node-fetch": "^2.1.2",
@@ -17,7 +18,7 @@
   },
   "scripts": {
     "start": "nodemon --watch misc/reloadme.json app.js",
-    "test": "jest ./test.js"
+    "test": "jest"
   },
   "author": "Federico Grandi <fgrandi30@gmail.com>",
   "license": "MIT"

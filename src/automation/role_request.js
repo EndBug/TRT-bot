@@ -20,7 +20,7 @@ class Game {
   updatePeople() {
     let count = 0;
     guild.members.forEach((member) => {
-      if (member.hasRole(this.role)) count++;
+      if (member.roles.has(this.role.id)) count++;
     });
     this.people = count;
   }
@@ -121,7 +121,7 @@ module.exports.run = () => {
             .setTimestamp()
             .setAuthor(user.username, user.displayAvatarURL);
           if (game != undefined) {
-            if (member.hasRole(game.role)) {
+            if (member.roles.has(game.role)) {
               member.removeRole(game.role).then(() => updateMessage(id));
               embed.addField(say("game-rem"), `- ${game.name}`);
               embed.setColor(colors.RED);

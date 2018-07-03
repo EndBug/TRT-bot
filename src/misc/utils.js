@@ -1,7 +1,11 @@
-/*global absolutePath client config Discord error fs guild ranks roles say tree*/
+/*global client config Discord error fs guild owner ranks roles say settings*/
 
 module.exports.name = "Utils";
 module.exports.utils = {
+  checkRank: (member, rank, strict = false) => {
+    let mr = module.exports.utils.rank(member);
+    return (mr >= rank || (member.user == owner && !strict));
+  },
   createArgs: (message) => {
     if (!(message instanceof Discord.Message)) return ["Invalid", "message"];
     let store = message.content.substring(config.p.length).split(/([ \n])+/g);
@@ -13,18 +17,21 @@ module.exports.utils = {
     return store;
   },
   getFullName: (user) => {
+    if (user instanceof Discord.GuildMember) user = user.user;
     if (user instanceof Discord.User) return `${user.username}#${user.discriminator} (${user.id})`;
     else return "<@invalid_user>";
   },
   getShortName: (user) => {
+    if (user instanceof Discord.GuildMember) user = user.user;
     if (user instanceof Discord.User) return `${user.username}#${user.discriminator}`;
     else return "<@invalid_user>";
   },
   rank: (member) => {
+    if (member instanceof Discord.User) member = module.exports.utils.userToMember(member);
     if (member instanceof Discord.GuildMember) {
-      if (member.hasRole(roles.developer)) return ranks.DEV;
-      else if (member.hasRole(roles.admin)) return ranks.ADMIN;
-      else if (member.hasRole(roles.staff)) return ranks.STAFF;
+      if (member.roles.has(roles.developer.id)) return ranks.DEV;
+      else if (member.roles.has(roles.admin.id)) return ranks.ADMIN;
+      else if (member.roles.has(roles.staff.id)) return ranks.STAFF;
     }
     return ranks.PLAYER;
   },
@@ -71,7 +78,9 @@ module.exports.utils = {
     return final;
   },
   updateConfig: () => {
-    module.exports.utils.writeJSON(absolutePath(tree["config.json"]), config);
+    let obj = Object.assign({}, config); //prevents editing config itself
+    obj.maintenance = `${obj.maintenance} `;
+    return settings.set("config", obj);
   },
   userToMember: (user) => {
     if (user instanceof Discord.User) return guild.members.get(user.id);

@@ -1,5 +1,7 @@
-/*global settings tree*/
+/*global absolutePath config mention say settings tree*/
 const Discord = require("discord.js");
+const Commando = require("discord.js-commando");
+global.Command = Commando.Command;
 const fs = require("fs");
 const GoogleSpreadsheet = require("google-spreadsheet");
 const Twit = require("twit");
@@ -19,8 +21,17 @@ function goGlobal(obj) {
   for (let key in obj) global[key] = obj[key];
 }
 
+global.answer = (msg, def, mention = false) => {
+  if (msg instanceof Commando.CommandMessage) {
+    let text = say(def);
+    if (mention) return msg.reply(text);
+    else return msg.say(text);
+  } else error("app.js", "answer", "msg is not a CommandMessage");
+};
+
 goGlobal({
   branch,
+  Commando,
   Discord,
   fs,
   GoogleSpreadsheet,
@@ -33,28 +44,17 @@ goGlobal({
 });
 loadMod("./tree.js");
 
-const config = require(tree["config.json"]);
-console.log(`[LOADER] Loaded config file`);
-const client = new Discord.Client();
-var guild, owner;
+var client, guild, owner;
 
-var say = require(tree[config.lang + ".js"]);
-//hard-coded message
-if (say("test") != "ok") throw new Error(`Language module ${config.lang} not working properly: test command returned \`"${say("test")}"\` instead of \`"ok"\``);
-else console.log(`[LOADER] Using ${say("language")} language`);
-
-client.login(token);
 
 const modules = [
   tree["channel_cleaning.js"],
-  tree["commands.js"],
   tree["new_member.js"],
   tree["reactions.js"],
   tree["role_request.js"],
   tree["status_rotation.js"],
   tree["twitter.js"]
 ];
-
 
 var channels = {},
   roles = {},
@@ -66,6 +66,59 @@ function error(file, f, message, callback = () => {}) {
 goGlobal({
   error
 });
+
+async function initClient() {
+  await loadSettings();
+  await settings.get("config").then(obj => {
+    global.config = obj;
+    config.clean = eval(obj.clean);
+    config.maintenance = eval(obj.maintenance.toLowerCase());
+    config.status = eval(obj.status);
+    global.say = require(tree[config.lang + ".js"]);
+    //hard-coded message
+    if (say("test") != "ok") throw new Error(`Language module ${config.lang} not working properly: test command returned \`"${say("test")}"\` instead of \`"ok"\``);
+    else console.log(`[LOADER] Using ${say("language")} language`);
+    client = new Commando.Client({
+      commandPrefix: config.p,
+      disableEveryone: true,
+      owner: config.owner,
+      unknownCommandResponse: false
+    });
+
+    client.on("error", console.error)
+      .on("warn", console.warn)
+      .on("debug", console.log);
+
+    client.registry.registerGroups([
+        ["dev", "Development & debugging"],
+        ["misc", "Various"],
+        ["mod", "Moderation"],
+        ["music", "Music"]
+      ]).registerDefaultGroups()
+      .registerDefaultTypes()
+      .registerCommandsIn(absolutePath(tree["commands"]));
+  });
+}
+
+function setInhibitors() {
+  client.dispatcher.addInhibitor(msg => {
+    try {
+      if (msg.channel != channels.bot && !(msg.channel instanceof Discord.DMChannel)) {
+        msg.delete();
+        if (msg.author != owner) {
+          msg.respond("ignored-cmd", mention(channels.bot)).then(m => m.delete(5000));
+          return true;
+        } else return false;
+      } else if (msg.channel instanceof Discord.DMChannel) {
+        if (msg.command != undefined) return (msg.command.name != "help");
+        else return true;
+      }
+      return false;
+    } catch (e) {
+      error("app.js", "inhibitor", e);
+    }
+  });
+}
 
 function initChannels() {
   return settings.get("channels").then((obj) => {
@@ -157,20 +210,6 @@ function loadUtils() {
   goGlobal(mod.utils);
 }
 
-class Command {
-  constructor(permission = ranks.PLAYER, name = "", syntax = "", description = "", hidden = false) {
-    this.name = name;
-    this.syn = syntax;
-    this.des = description;
-    this.rank = permission;
-    this.hide = hidden;
-  }
-}
-
-Discord.GuildMember.prototype.hasRole = function(role) {
-  return (role instanceof Discord.Role && this.roles.array().includes(role));
-};
-
 var ranks = {
   PLAYER: 0,
   STAFF: 1,
@@ -204,47 +243,11 @@ var ActivityTypes = {
   WATCHING: "WATCHING"
 };
 
-var commands = {
-  chat: {
-    help: new Command(ranks.PLAYER, "help", "help", say("help-help")),
-    info: new Command(ranks.PLAYER, "info", "info", say("info-help")),
-    invite: new Command(ranks.PLAYER, "invite", "invite", say("invite-help")),
-    // music: new Command(ranks.PLAYER, "music", "music", "Replies with helps infos for music.", true),
-    ping: new Command(ranks.PLAYER, "ping", "ping", say("ping-help")),
-    // mute: new Command(ranks.MOD, "mute", "mute <@User> <Days> <Reason>", "Mutes a user."),
-    // unmute: new Command(ranks.MOD, "unmute", "unmute <@User> <Reason>", "Unmutes a user."),
-    // warn: new Command(ranks.MOD, "warn", "warn <@User> <Reason>", "Warns a player."),
-    // prune: new Command(ranks.ADMIN, "prune", "prune", "Prunes a channel."),
-    // forgive: new Command(ranks.ADMIN, "forgive", "forgive <@User> <Reason>", "Deletes user's warns."),
-    // kick: new Command(ranks.ADMIN, "kick", "kick <@User> <Reason>", "Kicks a player from the server."),
-    // ban: new Command(ranks.ADMIN, "ban", "ban <@User> <Reason>", "Bans a player."),
-    // unban: new Command(ranks.ADMIN, "unban", "unban <@User> <Reason>", "Unbans a player."),
-    // softban: new Command(ranks.ADMIN, "softban", "softban <@User> <Days> <Reason>", "Bans a player for a defined time."),
-    dev: new Command(ranks.DEV, "dev", "dev", say("dev-help")),
-    eval: new Command(ranks.DEV, "eval", "eval <JS Script...>", say("eval-help")),
-    off: new Command(ranks.DEV, "off", "off", say("off-help")),
-    pref: new Command(ranks.DEV, "pref", "pref", say("pref-help", config.p)),
-    reload: new Command(ranks.ADMIN, "reload", "reload", say("reload-help")),
-    test: new Command(ranks.DEV, "test", "test", say("test-help"))
-  },
-  music: {
-    // play: new Command(ranks.PLAYER, "play", "play <YouTube link || Search term>", "Adds a video (or livestream) to the queue. If you are in a voice channel the bot will join it, if the queue is empty it will automatically start playing.", true),
-    // pause: new Command(ranks.PLAYER, "pause", "pause", "Pauses the stream.", true),
-    // stop: new Command(ranks.PLAYER, "stop", "stop", "Stops the music and clears the queue.", true),
-    // join: new Command(ranks.PLAYER, "join", "join", "Joins your voice channel.", true),
-    // skip: new Command(ranks.PLAYER, "skip", "skip", "Skips current song.", true),
-    // test: new Command(ranks.DEV, "mtest", "mtest", "Music test command")
-  }
-};
-
-
-
-client.on("error", console.error)
-  .on("warn", console.warn)
-  .on("debug", console.info)
-  .on("ready", async () => {
+(async () => {
+  await initClient();
+  client.on("ready", async () => {
     guild = client.guilds.array()[0];
-    owner = guild.members.get(config.ids.owner);
+    owner = guild.members.get(config.owner);
     guild.members.get(client.user.id).setNickname("");
 
     await loadSettings();
@@ -260,15 +263,12 @@ client.on("error", console.error)
         chars,
         client,
         colors,
-        Command,
-        commands,
         config,
         guild,
         owner,
         PresenceStatuses,
         ranks,
         roles,
-        say,
         webhooks
       }
     );
@@ -276,7 +276,11 @@ client.on("error", console.error)
 
     loadUtils();
 
+    setInhibitors();
+
     runModules();
 
     owner.send(say("running")).then(m => m.delete(5000));
   });
+  client.login(token);
+})();

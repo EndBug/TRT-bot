@@ -82,13 +82,13 @@ test("rank", () => {
   let member = guild.members.get(client.user.id),
     role_1 = guild.roles.find("name", "role_1");
   global.roles = {
-    admin: role_1
+    developer: role_1
   };
   global.ranks = {
-    ADMIN: 2,
+    DEV: 3,
     PLAYER: 0
   };
-  expect(utils.utils.rank(member)).toBe(2);
+  expect(utils.utils.rank(member)).toBe(3);
   expect(utils.utils.rank({})).toBe(0);
 });
 
@@ -129,7 +129,7 @@ test("now", () => {
 
 test("clean", async () => {
   global.config = {
-    cleantimeMin: 120
+    clean: 120
   };
   let channel = guild.channels.find("type", "text");
   let i = 0;
