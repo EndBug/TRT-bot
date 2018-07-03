@@ -109,7 +109,10 @@ function setInhibitors() {
           msg.respond("ignored-cmd", mention(channels.bot)).then(m => m.delete(5000));
           return true;
         } else return false;
-      } else if (msg.channel instanceof Discord.DMChannel) return (msg.command.id != "help");
+      } else if (msg.channel instanceof Discord.DMChannel) {
+        if (msg.command != undefined) return (msg.command.name != "help");
+        else return true;
+      }
       return false;
     } catch (e) {
       error("app.js", "inhibitor", e);
