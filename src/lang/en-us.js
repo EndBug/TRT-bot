@@ -32,6 +32,8 @@ module.exports = (name, v1, v2, v3) => {
     "invite-help": "Replies with the invite for this server.",
     "invite-msg": "Share this link! ;)\nhttps://discord.gg/TJc4r9X",
     "invite-note": "Don't worry, this won't expire!",
+    "maintenance-already-off": "Bot is already in public mode.",
+    "maintenance-already-on": "Bot is already in developer mode.",
     "maintenance-off": "Bot set in public mode.",
     "maintenance-on": "Bot set in developer mode.",
     "moderation-required": `**MODERATION REQUIRED:**\nUser: ${v1}\nChannel: ${v2}`,

@@ -1,4 +1,4 @@
-/*global checkRank Commando config rank ranks say settings*/
+/*global answer checkRank Commando config rank ranks say updateConfig*/
 
 module.exports = class DevCMD extends Commando.Command {
   constructor(client) {
@@ -12,7 +12,7 @@ module.exports = class DevCMD extends Commando.Command {
         key: "value",
         prompt: "Whether or not the maintenance mode should be active",
         type: "boolean",
-        default: !config.maintenance
+        default: "undef"
       }]
     });
   }
@@ -20,9 +20,12 @@ module.exports = class DevCMD extends Commando.Command {
   run(msg, {
     value
   }) {
-    config.maintenance = value;
-    settings.set("config", config);
-    msg.answer(`maintenance${config.maintenance ? "on" : "off"}`);
+    if (value == "undef") value = !config.maintenance;
+    if (value != config.maintenance) {
+      config.maintenance = value;
+      updateConfig();
+      answer(msg, `maintenance-${config.maintenance ? "on" : "off"}`);
+    } else answer(msg, `maintenance-already-${config.maintenance ? "on" : "off"}`, true);
   }
 
   hasPermission(msg) {
