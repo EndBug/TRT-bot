@@ -39,7 +39,7 @@ function createMessage() {
     value2 = "";
   for (let i = 0; i < games.length; i++) {
     let game = games[i],
-      str = `\n${game.emoji} → ${game.name} - ${game.people} user${game.people > 1 ? "s" : ""}`;
+      str = `\n${game.emoji} → ${game.name} - ${game.people} user${game.people != 1 ? "s" : ""}`;
     if (i < games.length / 2) value1 += str;
     else value2 += str;
   }
