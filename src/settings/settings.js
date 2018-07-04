@@ -103,3 +103,13 @@ module.exports.set = (name, obj) => {
     });
   }
 };
+
+module.exports.assign = async (name, obj) => {
+  if (!Object.keys(worksheets).includes(name)) error("settings.js", "assign", `Name is not included: ${name}`);
+  else {
+    await module.exports.get(name).then(previous => {
+      let next = Object.assign(previous, obj);
+      module.exports.set(name, next);
+    });
+  }
+};
