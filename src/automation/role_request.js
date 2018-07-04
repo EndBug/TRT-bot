@@ -50,7 +50,7 @@ function createMessage() {
 function sortGames() {
   games.sort((a, b) => {
     let p = b.people - a.people;
-    if (p == 0) return a.name - b.name;
+    if (p == 0) return a.name > b.name;
     else return p;
   });
 }
