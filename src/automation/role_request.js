@@ -121,7 +121,7 @@ module.exports.run = () => {
             .setTimestamp()
             .setAuthor(user.username, user.displayAvatarURL);
           if (game != undefined) {
-            if (member.roles.has(game.role)) {
+            if (member.roles.has(game.role.id)) {
               member.removeRole(game.role).then(() => updateMessage(id));
               embed.addField(say("game-rem"), `- ${game.name}`);
               embed.setColor(colors.RED);
