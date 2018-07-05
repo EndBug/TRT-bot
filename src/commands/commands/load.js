@@ -51,7 +51,7 @@ module.exports = class LoadCommandCommand extends Command {
 
     if (this.client.shard) {
       try {
-        await this.client.shard.broadcastEval(`
+        this.client.shard.broadcastEval(`
 					if(this.shard.id !== ${this.client.shard.id}) {
 						const cmdPath = this.registry.resolveCommandPath('${command.groupID}', '${command.name}');
 						delete require.cache[cmdPath];

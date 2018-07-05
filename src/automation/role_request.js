@@ -28,6 +28,7 @@ class Game {
 
 var games = [];
 var channel = channels.games;
+var id;
 
 function createMessage() {
   let embed = new Discord.RichEmbed()
@@ -39,7 +40,7 @@ function createMessage() {
     value2 = "";
   for (let i = 0; i < games.length; i++) {
     let game = games[i],
-      str = `\n${game.emoji} → ${game.name} - ${game.people} user${game.people > 1 ? "s" : ""}`;
+      str = `\n${game.emoji} → ${game.name} - ${game.people} user${game.people != 1 ? "s" : ""}`;
     if (i < games.length / 2) value1 += str;
     else value2 += str;
   }
@@ -50,7 +51,7 @@ function createMessage() {
 function sortGames() {
   games.sort((a, b) => {
     let p = b.people - a.people;
-    if (p == 0) return a.name - b.name;
+    if (p == 0) return a.name > b.name;
     else return p;
   });
 }
@@ -66,30 +67,36 @@ function updateMessage(id) {
   sortGames();
   channel.fetchMessage(id).then(msg => {
     if (msg != undefined) msg.edit(createMessage());
-    else channel.send("Rebuilding...").then(nmsg => nmsg.edit(createMessage()));
+    else channel.send("Rebuilding...").then(nmsg => {
+      nmsg.edit(createMessage());
+      id = nmsg.id;
+      settings.assign("messages", {
+        games: id
+      });
+    });
   });
 }
 
 module.exports.run = () => {
-  channel.fetchMessages({
-    limit: 100
-  }).then(messages => {
-    messages.forEach(msg => {
-      if (msg.author != client.user) msg.delete();
+  settings.get("messages").then(obj => {
+    id = obj.games;
+    channel.fetchMessages({
+      limit: 100
+    }).then(messages => {
+      messages.forEach(msg => {
+        if (msg.id != id) msg.delete();
+      });
     });
-  });
 
-  settings.get("games").then(obj => {
-    for (let rid in obj) {
-      let eid = obj[rid];
-      let curr = new Game(rid, eid);
-      if (curr.invalid) error("role_request.js", "Game/constructor", `Skipping undefined game:\nRole: \`${rid}\`\nEmoji: \`${eid}\``);
-      else games.push(curr);
-    }
-    sortGames();
+    settings.get("games").then(gobj => {
+      for (let rid in gobj) {
+        let eid = gobj[rid];
+        let curr = new Game(rid, eid);
+        if (curr.invalid) error("role_request.js", "Game/constructor", `Skipping undefined game:\nRole: \`${rid}\`\nEmoji: \`${eid}\``);
+        else games.push(curr);
+      }
+      sortGames();
 
-    settings.get("messages").then(obj => {
-      let id = obj.games;
       new Promise((resolve) => {
         if (id == undefined) channel.send(say("game-build")).then(msg => {
           id = msg.id;
@@ -97,7 +104,7 @@ module.exports.run = () => {
         });
         else resolve();
       }).then(() => {
-        if (id != obj.games) settings.set("messages", {
+        if (id != obj.games) settings.assign("messages", {
           games: id
         });
 
@@ -111,6 +118,21 @@ module.exports.run = () => {
             });
             go();
           });
+        });
+
+        client.on("roleDelete", (role) => {
+          for (let i = 0; i < games.length; i++) {
+            let g = games[i];
+            if (g.role == role) {
+              games.splice(i, 1);
+              break;
+            }
+          }
+          updateMessage(id);
+        });
+
+        client.on("custom-roleRequestUpdate", () => {
+          updateMessage(id);
         });
 
         client.on("messageReactionAdd", (reaction, user) => {
