@@ -120,6 +120,21 @@ module.exports.run = () => {
           });
         });
 
+        client.on("roleDelete", (role) => {
+          for (let i = 0; i < games.length; i++) {
+            let g = games[i];
+            if (g.role == role) {
+              games.splice(i, 1);
+              break;
+            }
+          }
+          updateMessage(id);
+        });
+
+        client.on("custom-roleRequestUpdate", () => {
+          updateMessage(id);
+        });
+
         client.on("messageReactionAdd", (reaction, user) => {
           if (reaction.message.id != id || user == client.user) return;
           let game = findGame(reaction.emoji),
