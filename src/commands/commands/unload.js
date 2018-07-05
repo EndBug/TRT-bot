@@ -33,7 +33,7 @@ module.exports = class UnloadCommandCommand extends Command {
 
     if (this.client.shard) {
       try {
-        await this.client.shard.broadcastEval(`
+        this.client.shard.broadcastEval(`
 					if(this.shard.id !== ${this.client.shard.id}) this.registry.commands.get('${args.command.name}').unload();
 				`);
       } catch (err) {
