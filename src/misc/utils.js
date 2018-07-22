@@ -10,7 +10,7 @@ module.exports.utils = {
     if (!(message instanceof Discord.Message)) return ["Invalid", "message"];
     let store = message.content.substring(config.p.length).split(/([ \n])+/g);
     while (store[0] == '') store.shift();
-    store = store.filter(function(a) {
+    store = store.filter(function (a) {
       return (a !== '\n' && a !== " ");
     });
     if (store.length == 0) store.push("");
