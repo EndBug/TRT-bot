@@ -59,7 +59,7 @@ module.exports.utils = {
     else return "<@invalid_user>";
   },
   mentionToID: (str) => {
-    return str.replace(/[\\<>@#&!]/, "");
+    return str.replace(/[\\<>@#&!]/g, "");
   },
   now: () => {
     return new Date();
