@@ -102,6 +102,7 @@ async function initClient() {
 
 function setInhibitors() {
   client.dispatcher.addInhibitor(msg => {
+    if (msg.guild != guild) return true;
     try {
       if (msg.channel != channels.bot && !(msg.channel instanceof Discord.DMChannel)) {
         msg.delete();
