@@ -246,7 +246,7 @@ var ActivityTypes = {
 (async () => {
   await initClient();
   client.on("ready", async () => {
-    guild = client.guilds.array()[0];
+    guild = client.guilds.get(config.guild);
     owner = guild.members.get(config.owner);
     guild.members.get(client.user.id).setNickname("");
 
