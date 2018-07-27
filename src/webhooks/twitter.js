@@ -2,11 +2,7 @@
 module.exports.name = "Twitter webhook";
 
 module.exports.run = (force = 0) => {
-  settings.get("twitter").then(({
-    options,
-    refreshMin,
-    targets
-  }) => {
+  settings.get("twitter").then(({ options, refreshMin, targets }) => {
     targets = JSON.parse(targets);
 
     let forced = (force != 0);
@@ -50,6 +46,9 @@ module.exports.run = (force = 0) => {
               let t = tweets.length - 1;
               let go = () => {
                 let tweet = tweets[t];
+                if (!tweet) {
+                  error("twitter.js", "fetchMessages", `Tweet is undefined:\n\`t\`: \`${t}\`\n\`tweets.length\`: \`${tweets.length}\`\n\`tweets\`: \`${JSON.stringify(tweets)}\``);
+                }
                 let stamp = new Date(tweet.created_at);
                 if (stamp > last || force > 0) {
                   send(tweet).then(() => {
