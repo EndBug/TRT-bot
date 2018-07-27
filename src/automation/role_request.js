@@ -121,6 +121,8 @@ module.exports.run = () => {
         });
 
         client.on("roleDelete", (role) => {
+          if (role.guild != guild) return;
+
           for (let i = 0; i < games.length; i++) {
             let g = games[i];
             if (g.role == role) {
@@ -136,7 +138,7 @@ module.exports.run = () => {
         });
 
         client.on("messageReactionAdd", (reaction, user) => {
-          if (reaction.message.id != id || user == client.user) return;
+          if (reaction.message.id != id || user == client.user || reaction.message.guild != guild) return;
           let game = findGame(reaction.emoji),
             member = userToMember(user),
             embed = new Discord.RichEmbed()

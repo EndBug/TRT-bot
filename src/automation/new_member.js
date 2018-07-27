@@ -1,7 +1,9 @@
-/*global channels client error getFullName getShortName mention roles say*/
+/*global channels client error getFullName getShortName guild mention roles say*/
 module.exports.name = "New member";
 module.exports.run = () => {
   client.on("guildMemberAdd", (member) => {
+    if (member.guild != guild) return;
+
     if (member.user.bot) {
       console.log(`<@${getFullName(member.user.id)}> added to the server.`);
     } else {
