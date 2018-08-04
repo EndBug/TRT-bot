@@ -21,6 +21,9 @@
     "start": "nodemon --watch misc/reloadme.json app.js",
     "test": "jest"
   },
+  "jest": {
+    "testURL": "http://localhost"
+  },
   "author": "Federico Grandi <fgrandi30@gmail.com>",
   "license": "MIT"
 }
