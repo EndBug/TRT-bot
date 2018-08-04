@@ -1,4 +1,6 @@
 /*global absolutePath config mention say settings tree*/
+require('dotenv').load();
+
 const Discord = require("discord.js");
 const Commando = require("discord.js-commando");
 global.Command = Commando.Command;
