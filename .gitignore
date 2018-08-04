@@ -5,3 +5,4 @@ node_modules
 reloadme.json
 *.old
 sample.js
+.env

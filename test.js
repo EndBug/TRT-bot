@@ -1,4 +1,5 @@
 /*global client Discord expect guild jest test*/
+require('dotenv').load();
 global.Discord = require("discord.js");
 global.fetch = require("node-fetch");
 global.fs = require("fs");
@@ -30,7 +31,7 @@ const reactions = require("./src/automation/reactions.js");
 const status = require("./src/automation/status_rotation.js");
 
 
-Discord.GuildMember.prototype.hasRole = function(role) {
+Discord.GuildMember.prototype.hasRole = function (role) {
   if (role instanceof Discord.Role)
     for (let r of this.roles.array())
       if (r == role) return true;
