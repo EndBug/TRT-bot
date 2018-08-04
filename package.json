@@ -15,11 +15,14 @@
   },
   "devDependencies": {
     "dotenv": "^6.0.0",
-    "jest": "^23.4.1"
+    "jest": "^23.4.2"
   },
   "scripts": {
     "start": "nodemon --watch misc/reloadme.json app.js",
     "test": "jest"
+  },
+  "jest": {
+    "testURL": "http://localhost"
   },
   "author": "Federico Grandi <fgrandi30@gmail.com>",
   "license": "MIT"
