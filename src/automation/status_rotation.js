@@ -26,8 +26,7 @@ var maintenance = [
   new Presence("maintenance work...", ActivityTypes.WATCHING, PresenceStatuses.DND)
 ];
 
-module.exports.name = "Status rotation";
-module.exports.run = () => {
+function change() {
   let curr;
   if (!config.maintenance) {
     curr = status[is];
@@ -44,7 +43,11 @@ module.exports.run = () => {
     type: curr.game.type
   });
 
-  if (branch != "master") guild.members.get(client.user.id).setNickname(`TRT Bot β [${branch}]`, `Beta branch detected in code: ${branch}`);
+  if (branch != "master") guild.member(client.user).setNickname(`TRT Bot β [${branch}]`, `Beta branch detected in code: ${branch}`);
+}
 
-  setTimeout(module.exports.run, config.status * 1000);
+module.exports.name = "Status rotation";
+module.exports.run = () => {
+  change();
+  setInterval(change, config.status * 1000);
 };
