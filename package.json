@@ -4,7 +4,7 @@
   "description": "A NodeJS Discord bot",
   "main": "app.js",
   "dependencies": {
-    "discord.js": "^11.3.2",
+    "discord.js": "^11.4.2",
     "discord.js-commando": "^0.10.0",
     "git-branch": "^2.0.1",
     "google-spreadsheet": "^2.0.5",
