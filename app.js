@@ -1,4 +1,4 @@
-/*global absolutePath config say settings tree*/
+/*global answer absolutePath config say settings tree*/
 require('dotenv').load();
 
 const Discord = require("discord.js");
@@ -109,7 +109,7 @@ function setInhibitors() {
       if (msg.channel != channels.bot && !(msg.channel instanceof Discord.DMChannel)) {
         msg.delete();
         if (msg.author != owner) {
-          msg.respond("ignored-cmd", channels.bot).then(m => m.delete(5000));
+          answer(msg, "ignored-cmd", false, channels.bot).then(m => m.delete(5000));
           return true;
         } else return false;
       } else if (msg.channel instanceof Discord.DMChannel) {
