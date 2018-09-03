@@ -25,6 +25,10 @@ function goGlobal(obj) {
 
 global.answer = (msg, def, mention = false, ...args) => {
   if (msg instanceof Commando.CommandMessage) {
+    if (typeof mention != 'boolean') {
+      args.splice(0, 0, mention);
+      mention = false;
+    }
     let text = say(def, ...args);
     if (mention) return msg.reply(text);
     else return msg.say(text);
@@ -109,7 +113,7 @@ function setInhibitors() {
       if (msg.channel != channels.bot && !(msg.channel instanceof Discord.DMChannel)) {
         msg.delete();
         if (msg.author != owner) {
-          answer(msg, "ignored-cmd", false, channels.bot).then(m => m.delete(5000));
+          answer(msg, "ignored-cmd", channels.bot).then(m => m.delete(5000));
           return true;
         } else return false;
       } else if (msg.channel instanceof Discord.DMChannel) {

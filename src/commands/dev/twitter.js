@@ -21,10 +21,7 @@ module.exports = class TwitterCMD extends Commando.Command {
     });
   }
 
-  run(msg, {
-    mode,
-    target
-  }) {
+  run(msg, { mode, target }) {
     settings.get("twitter").then(async obj => {
       let curr = JSON.parse(obj.targets);
       if (mode == "add") curr.push(target);
@@ -41,7 +38,7 @@ module.exports = class TwitterCMD extends Commando.Command {
       await settings.assign("twitter", {
         targets: JSON.stringify(curr)
       });
-      answer(msg, `twitter-${mode == "add" ? "add" : "remove"}`, false, [target]);
+      answer(msg, `twitter-${mode == "add" ? "add" : "remove"}`, target);
     });
   }
 
