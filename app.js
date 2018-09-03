@@ -1,4 +1,4 @@
-/*global absolutePath config mention say settings tree*/
+/*global answer absolutePath config say settings tree*/
 require('dotenv').load();
 
 const Discord = require("discord.js");
@@ -23,9 +23,13 @@ function goGlobal(obj) {
   for (let key in obj) global[key] = obj[key];
 }
 
-global.answer = (msg, def, mention = false, args = []) => {
+global.answer = (msg, def, mention = false, ...args) => {
   if (msg instanceof Commando.CommandMessage) {
-    let text = say(def, args);
+    if (typeof mention != 'boolean') {
+      args.splice(0, 0, mention);
+      mention = false;
+    }
+    let text = say(def, ...args);
     if (mention) return msg.reply(text);
     else return msg.say(text);
   } else error("app.js", "answer", "msg is not a CommandMessage");
@@ -109,7 +113,7 @@ function setInhibitors() {
       if (msg.channel != channels.bot && !(msg.channel instanceof Discord.DMChannel)) {
         msg.delete();
         if (msg.author != owner) {
-          msg.respond("ignored-cmd", mention(channels.bot)).then(m => m.delete(5000));
+          answer(msg, "ignored-cmd", channels.bot).then(m => m.delete(5000));
           return true;
         } else return false;
       } else if (msg.channel instanceof Discord.DMChannel) {

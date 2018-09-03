@@ -1,5 +1,5 @@
-module.exports = (name, v1, v2, v3) => {
-  if (v1 instanceof Array)[v1, v2, v3] = v1;
+module.exports = (name, ...v) => {
+  let [v1, v2, v3, v4] = v;
   let links = {
     discordAPI: "https://discord.gg/discord-api",
     discordjs: "https://discord.gg/bRCvFy9",
@@ -54,7 +54,7 @@ module.exports = (name, v1, v2, v3) => {
     "twitter-help": "Manages twitter targets.",
     "twitter-help-mode": "Whether you want to add or remove targets. Can be either `add` or `remove`.",
     "twitter-help-target": "The user you want to target on Twitter (by full username).",
-    "welcome": `Welcome ${v1}! Look at the ${v2} channel to see how this server works ;)\nRemember that bot commands only work in ${v3}!`,
+    "welcome": `Welcome ${v1}! Look at the ${v2} channel to see how this server works ;)\nTo get a game role, go to ${v3}.\nRemember that bot commands only work in ${v4}!`,
 
     "language": "American English",
     "test": `ok`
