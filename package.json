@@ -10,7 +10,7 @@
     "google-spreadsheet": "^2.0.5",
     "node-fetch": "^2.2.0",
     "nodemon": "^1.18.3",
-    "npm": "^6.4.0",
+    "npm": "^6.4.1",
     "twit": "^2.2.11"
   },
   "devDependencies": {
