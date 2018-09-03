@@ -1,4 +1,4 @@
-/*global answer Commando mention owner say*/
+/*global answer Commando owner say*/
 
 module.exports = class InfoCMD extends Commando.Command {
   constructor(client) {
@@ -12,7 +12,7 @@ module.exports = class InfoCMD extends Commando.Command {
   }
 
   run(msg) {
-    answer(msg, "info-msg", false, mention(owner));
+    answer(msg, "info-msg", false, owner);
   }
 
 };

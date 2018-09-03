@@ -51,13 +51,6 @@ module.exports.utils = {
     if (member instanceof Discord.GuildMember && module.exports.utils.rank(member) == ranks.DEV) return true;
     else return false;
   },
-  mention: (element) => {
-    if (element instanceof Discord.GuildMember) element = element.user;
-    if (element instanceof Discord.User) return `<@${element.id}>`;
-    else if (element instanceof Discord.Channel) return `<#${element.id}>`;
-    else if (element instanceof Discord.Role) return `<&${element.id}>`;
-    else return "<@invalid_user>";
-  },
   mentionToID: (str) => {
     return str.replace(/[\\<>@#&!]/g, "");
   },

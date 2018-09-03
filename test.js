@@ -116,14 +116,6 @@ test("maintenancePerm", () => {
   expect(utils.utils.maintenancePerm({})).toBe(false);
 });
 
-test("mention", () => {
-  let user = client.user,
-    channel = guild.channels.find("type", "text");
-  expect(utils.utils.mention(user)).toBe(`<@${user.id}>`);
-  expect(utils.utils.mention(channel)).toBe(`<#${channel.id}>`);
-  expect(utils.utils.mention({})).toBe("<@invalid_user>");
-});
-
 test("now", () => {
   expect(utils.utils.now() instanceof Date).toBe(true);
 });
