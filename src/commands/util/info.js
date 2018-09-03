@@ -12,7 +12,7 @@ module.exports = class InfoCMD extends Commando.Command {
   }
 
   run(msg) {
-    answer(msg, "info-msg", false, [mention(owner)]);
+    answer(msg, "info-msg", false, mention(owner));
   }
 
 };

@@ -1,5 +1,5 @@
-module.exports = (name, v1, v2, v3) => {
-  if (v1 instanceof Array)[v1, v2, v3] = v1;
+module.exports = (name, ...v) => {
+  let [v1, v2, v3, v4] = v;
   let links = {
     discordAPI: "https://discord.gg/discord-api",
     discordjs: "https://discord.gg/bRCvFy9",
