@@ -2,22 +2,23 @@
 
 module.exports.name = "Channel cleaning";
 
-module.exports.clean = (curr, callback = () => {}) => {
-  curr.fetchMessages().then((messages) => {
-    if (messages.size > 0) curr.bulkDelete(100, true).then(module.exports.clean(curr, callback)).catch((e) => error("channel_cleaning.js", "clean/bulkDelete", e));
-    else {
-      setTimeout(() => module.exports.clean(curr), config.clean * 60 * 1000);
-      callback(messages.size);
-    }
-  }).catch((e) => error("channel_cleaning.js", "clean/fetchMessages", e));
+module.exports.clean = async (curr) => {
+  let messages = await curr.fetchMessages();
+  if (messages.size > 0) {
+    await curr.bulkDelete(100, true);
+    return await module.exports.clean(curr).catch(e => error("channel_cleaning.js", "clean/bulkDelete", e));
+  } else {
+    setTimeout(() => module.exports.clean(curr), config.clean * 60 * 1000);
+    return messages.size;
+  }
 };
 
-module.exports.run = (...extra) => {
+module.exports.run = async (...extra) => {
   let to_clean = [
     channels.bot,
     channels.nomic,
     ...extra
   ];
 
-  for (let curr of to_clean) module.exports.clean(curr);
+  for (let curr of to_clean) await module.exports.clean(curr);
 };
