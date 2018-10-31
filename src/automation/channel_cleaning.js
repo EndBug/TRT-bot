@@ -12,10 +12,11 @@ module.exports.clean = (curr, callback = () => {}) => {
   }).catch((e) => error("channel_cleaning.js", "clean/fetchMessages", e));
 };
 
-module.exports.run = () => {
+module.exports.run = (...extra) => {
   let to_clean = [
     channels.bot,
-    channels.nomic
+    channels.nomic,
+    ...extra
   ];
 
   for (let curr of to_clean) module.exports.clean(curr);
