@@ -81,7 +81,7 @@ test("getShortName", () => {
 
 test("rank", () => {
   let member = guild.members.get(client.user.id),
-    role_1 = guild.roles.find("name", "role_1");
+    role_1 = guild.roles.find(r => r.name == 'role_1');
   global.roles = {
     developer: role_1
   };
@@ -108,7 +108,7 @@ test("rankToString", () => {
 
 test("maintenancePerm", () => {
   let member = guild.members.get(client.user.id),
-    role_1 = guild.roles.find("name", "role_1");
+    role_1 = guild.roles.find(r => r.name == 'role_1');
   global.roles = {
     developer: role_1
   };
@@ -124,7 +124,7 @@ test("clean", async () => {
   global.config = {
     clean: 120
   };
-  let channel = guild.channels.find("type", "text");
+  let channel = guild.channels.find(c => c.type == 'text');
   global.error = console.log;
   await channel.send("Prune test.");
   let result = await channel_cleaning.clean(channel);
@@ -141,7 +141,7 @@ test("reactions", async () => {
       resolve();
       reject();
     });
-    let channel = guild.channels.find("type", "text");
+    let channel = guild.channels.find(c => c.type == 'text');
     channel.send("Reaction test.").then((message) => {
       message.react("😂").then(() => message.react("😏"));
     });
