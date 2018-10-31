@@ -125,24 +125,10 @@ test("clean", async () => {
     clean: 120
   };
   let channel = guild.channels.find("type", "text");
-  let i = 0;
   global.error = console.log;
-  let result;
+  await channel.send("Prune test.");
+  let result = await channel_cleaning.clean(channel);
 
-  let p = new Promise((resolve) => {
-    function s() {
-      channel.send("Prune test.").then(() => {
-        i++;
-        if (i < 3) s();
-        else channel_cleaning.clean(channel, (n) => {
-          result = n;
-          resolve();
-        });
-      });
-    }
-    s();
-  });
-  await p;
   expect(result).toBeLessThanOrEqual(100);
 });
 
