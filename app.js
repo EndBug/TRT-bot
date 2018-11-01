@@ -1,5 +1,5 @@
 /*global answer absolutePath config say settings tree*/
-require('dotenv').load();
+if (process.env.NODE_ENV != 'production') require('dotenv').load();
 
 const Discord = require("discord.js");
 const Commando = require("discord.js-commando");
