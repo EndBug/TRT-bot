@@ -1,5 +1,5 @@
 /*global answer absolutePath config say settings tree*/
-require('dotenv').load();
+if (process.env.NODE_ENV != 'production') require('dotenv').load();
 
 const Discord = require("discord.js");
 const Commando = require("discord.js-commando");
@@ -8,7 +8,7 @@ const fs = require("fs");
 const GoogleSpreadsheet = require("google-spreadsheet");
 const Twit = require("twit");
 var branch = "master";
-if (process.env.NODE_HOME != "/app/.heroku/node") branch = require("git-branch").sync(); //does not work in Heroku, but in Heroku only the master branch is deployed
+if (process.env.NODE_ENV != 'production') branch = require("git-branch").sync(); //does not work in Heroku, but in Heroku only the master branch is deployed
 
 const googles = {
   email: process.env.GOOGLE_CLIENT_EMAIL,
