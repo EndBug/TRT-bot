@@ -2,14 +2,22 @@
 
 module.exports.name = "Channel cleaning";
 
-module.exports.clean = async (curr) => {
-  let messages = await curr.fetchMessages();
-  if (messages.size > 0) {
-    await curr.bulkDelete(100);
-    return await module.exports.clean(curr).catch(e => error("channel_cleaning.js", "clean/bulkDelete", e));
+module.exports.clean = async (curr, olderMode = false) => {
+  let collected = await curr.fetchMessages();
+  if (collected.size > 0) {
+    if (olderMode) {
+      for (let msg of collected.array()) {
+        await msg.delete();
+      }
+    } else {
+      let deleted = await curr.bulkDelete(100, true);
+      if (deleted.size < collected.size) olderMode = true;
+    }
+
+    return await module.exports.clean(curr, olderMode).catch(e => error("channel_cleaning.js", "clean/bulkDelete", e));
   } else {
     setTimeout(() => module.exports.clean(curr), config.clean * 60 * 1000);
-    return messages.size;
+    return collected.size;
   }
 };
 
