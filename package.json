@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "dotenv": "^6.2.0",
-    "jest": "^24.1.0"
+    "jest": "^24.3.0"
   },
   "scripts": {
     "start": "nodemon --watch misc/reloadme.json app.js",
