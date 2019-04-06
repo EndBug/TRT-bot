@@ -14,7 +14,7 @@
     "twit": "^2.2.11"
   },
   "devDependencies": {
-    "dotenv": "^6.2.0",
+    "dotenv": "^7.0.0",
     "jest": "^24.7.1"
   },
   "scripts": {
