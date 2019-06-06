@@ -1,5 +1,5 @@
 /*global client Discord expect guild jest test*/
-require('dotenv').load();
+require('dotenv').config();
 global.Discord = require("discord.js");
 global.fetch = require("node-fetch");
 global.fs = require("fs");
