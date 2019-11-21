@@ -9,7 +9,7 @@
     "git-branch": "^2.0.1",
     "google-spreadsheet": "^2.0.8",
     "node-fetch": "^2.6.0",
-    "nodemon": "^1.19.3",
+    "nodemon": "^2.0.0",
     "npm": "^6.11.3",
     "twit": "^2.2.11"
   },
