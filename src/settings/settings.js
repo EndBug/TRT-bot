@@ -20,89 +20,53 @@ function find(arr, row, col) {
   };
 }
 
-module.exports.run = () => {
-  return new Promise((resolve, reject) => {
-    doc.useServiceAccountAuth({
-      client_email: googles.email,
-      private_key: googles.key
-    }, () => {
-      doc.getInfo((err, info) => {
-        if (err) {
-          error("settings.js", "doc.getInfo", err);
-          reject(err);
-        } else {
-          for (let sheet of info.worksheets) worksheets[sheet.title] = sheet;
-          resolve();
-        }
-      });
-    });
+module.exports.run = async () => {
+  await doc.useServiceAccountAuth({
+    client_email: googles.email,
+    private_key: googles.key
   });
+
+  await doc.loadInfo();
+
+  for (let sheet of doc.sheetsByIndex) worksheets[sheet.title] = sheet
 };
 
-module.exports.get = (name, rows = 100, empty = false) => {
-  return new Promise((resolve, reject) => {
-    if (!Object.keys(worksheets).includes(name)) {
-      let err = `Name is not included: ${name}`;
-      error("settings.js", "get", err);
-      reject(err);
-    } else {
-      let sheet = worksheets[name];
-      sheet.getCells({
-        "max-col": 2,
-        "min-row": 2,
-        "max-row": rows,
-        "return-empty": empty
-      }, (err, cells) => {
-        if (err) {
-          error("settings.js", "sheet.getCells", err);
-          reject(err);
-        } else {
-          let res = {};
-          for (let cell of cells) {
-            if (cell.col == 1) {
-              let key = cell.value,
-                value = find(cells, cell.row, cell.col + 1).value;
-              res[key] = value;
-            }
-          }
-          resolve(res);
-        }
-      });
+module.exports.get = async (name, lastRow = 100, empty = false) => {
+  if (!Object.keys(worksheets).includes(name)) {
+    let err = `Name is not included: ${name}`;
+    error("settings.js", "get", err);
+    throw err;
+  } else {
+    let sheet = worksheets[name];
+    await sheet.loadCells();
+
+    let res = {};
+    for (let r = 1; r < lastRow; r++) {
+      let keyCell = sheet.getCell(r, 0),
+        valueCell = sheet.getCell(r, 1);
+      res[keyCell.value] = valueCell.value
     }
-  });
-};
+    return res;
+  }
+}
 
-module.exports.set = (name, obj) => {
+module.exports.set = async (name, obj) => {
   if (!Object.keys(worksheets).includes(name)) error("settings.js", "set", `Name is not included: ${name}`);
   else {
     let sheet = worksheets[name];
-    sheet.getCells({
-      "max-col": 2,
-      "min-row": 2,
-      "max-row": Object.keys(obj).length + 1,
-      "return-empty": true
-    }, (err, cells) => {
-      if (err) error("settings.js", "set", err);
-      else {
-        let index = 2;
-        for (let key in obj) {
-          let k = find(cells, index, 1);
-          let v = find(cells, index, 2);
-          if (k.err || v.err) error("settings.js", "set", `Invalid cells found:\n${k}\n${v}`);
-          else {
-            k.value = key;
-            let future = obj[key];
-            if (typeof future == Boolean) future = `${future.toString()} `;
-            v.value = future;
-            k.save();
-            v.save();
-            index++;
-          }
-        }
-      }
-    });
+    await sheet.loadCells();
+    let index = 1;
+    for (key in obj) {
+      let k = sheet.getCell(index, 0);
+      let v = sheet.getCell(index, 1);
+      k.value = key
+      let future = obj[key];
+      v.value = typeof future == Boolean ? `${future.toString()} ` : future;
+      index++
+    }
+    await sheet.saveUpdatedCells();
   }
-};
+}
 
 module.exports.assign = async (name, obj) => {
   if (!Object.keys(worksheets).includes(name)) error("settings.js", "assign", `Name is not included: ${name}`);

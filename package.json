@@ -7,7 +7,7 @@
     "discord.js": "^11.4.2",
     "discord.js-commando": "^0.10.0",
     "git-branch": "^2.0.1",
-    "google-spreadsheet": "^2.0.8",
+    "google-spreadsheet": "^3.0.8",
     "node-fetch": "^2.6.0",
     "nodemon": "^2.0.2",
     "npm": "^6.13.4",
