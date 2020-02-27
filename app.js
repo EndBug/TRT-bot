@@ -66,7 +66,7 @@ var channels = {},
   roles = {},
   webhooks = {};
 
-function error(file, f, message, callback = () => {}) {
+function error(file, f, message, callback = () => { }) {
   owner.send(`**ERROR:**\n\`${file}\` > \`${f}\`\n*${message}*`).then((m) => callback(m));
 }
 goGlobal({
@@ -76,6 +76,7 @@ goGlobal({
 async function initClient() {
   await loadSettings();
   await settings.get("config").then(obj => {
+    console.log(obj)
     global.config = obj;
     config.clean = eval(obj.clean);
     config.maintenance = eval(obj.maintenance.toLowerCase());
@@ -96,11 +97,11 @@ async function initClient() {
       .on("debug", console.log);
 
     client.registry.registerGroups([
-        ["dev", "Development & debugging"],
-        ["misc", "Various"],
-        ["mod", "Moderation"],
-        ["music", "Music"]
-      ]).registerDefaultGroups()
+      ["dev", "Development & debugging"],
+      ["misc", "Various"],
+      ["mod", "Moderation"],
+      ["music", "Music"]
+    ]).registerDefaultGroups()
       .registerDefaultTypes()
       .registerCommandsIn(absolutePath(tree["commands"]));
   });
@@ -182,7 +183,7 @@ function initWebhooks() {
       }).catch((err) => reject(err));
     });
   }).catch((e, t = false) => {
-    let f = () => {};
+    let f = () => { };
     if (t) f = () => {
       throw new Error(e);
     };
@@ -265,19 +266,19 @@ var ActivityTypes = {
       ranks,
       PresenceStatuses,
       ActivityTypes, {
-        ActivityTypes,
-        channels,
-        chars,
-        client,
-        colors,
-        config,
-        guild,
-        owner,
-        PresenceStatuses,
-        ranks,
-        roles,
-        webhooks
-      }
+      ActivityTypes,
+      channels,
+      chars,
+      client,
+      colors,
+      config,
+      guild,
+      owner,
+      PresenceStatuses,
+      ranks,
+      roles,
+      webhooks
+    }
     );
     goGlobal(to_global);
 
