@@ -44,7 +44,7 @@ module.exports.get = async (name, lastRow = 100, empty = false) => {
     for (let r = 1; r < lastRow; r++) {
       let keyCell = sheet.getCell(r, 0),
         valueCell = sheet.getCell(r, 1);
-      res[keyCell.value] = valueCell.value
+      if (!!keyCell.value && !!valueCell.value) res[keyCell.value] = valueCell.value
     }
     return res;
   }
