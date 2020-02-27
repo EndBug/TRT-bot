@@ -5,7 +5,7 @@ const Discord = require("discord.js");
 const Commando = require("discord.js-commando");
 global.Command = Commando.Command;
 const fs = require("fs");
-const GoogleSpreadsheet = require("google-spreadsheet");
+const GoogleSpreadsheet = require("google-spreadsheet").GoogleSpreadsheet;
 const Twit = require("twit");
 var branch = "master";
 if (process.env.NODE_ENV != 'production') branch = require("git-branch").sync(); //does not work in Heroku, but in Heroku only the master branch is deployed
